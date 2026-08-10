@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHOENIX · Code. Build. Conquer.</title>
+    <meta name="description" content="Official website of the PHOENIX Club — Rajalakshmi Engineering College. Code. Build. Conquer.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;600&family=Courier+Prime&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Intro video overlay: plays on load, then reveals the site -->
+    <div class="intro-overlay" id="intro-overlay">
+        <video id="intro-video" src="assets/initial.mp4" autoplay muted playsinline preload="auto"></video>
+        <div class="intro-skip" id="intro-skip">SKIP →</div>
+    </div>
+
+    <!-- Background Canvas: cables + embers -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Kinetic Grid Canvas: reactive grid trail -->
+    <canvas id="kinetic-grid-canvas"></canvas>
+
+    <!-- Custom Trailing Cursor -->
+    <div class="custom-cursor" id="custom-cursor">
+        <div class="cursor-inner"></div>
+        <div class="cursor-outer"></div>
+    </div>
+
+    <!-- ── NAVIGATION ─────────────────────────────────── -->
+    <header class="main-header">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo" data-hover-trigger>
+                <img src="assets/phoenix_logo.png" alt="PHOENIX" class="nav-logo-img">
+            </a>
+            <nav class="nav-links">
+                <a href="#hero"       class="nav-link active" data-hover-trigger><span class="nav-num">01</span> HOME</a>
+                <a href="#next-event" class="nav-link"        data-hover-trigger><span class="nav-num">02</span> LIVE_SPARK</a>
+                <a href="#gallery"    class="nav-link"        data-hover-trigger><span class="nav-num">03</span> CHRONICLES</a>
+                <a href="#members"    class="nav-link"        data-hover-trigger><span class="nav-num">04</span> CORE_X_BOARD</a>
+                <a href="#connect"    class="nav-link"        data-hover-trigger><span class="nav-num">05</span> CONNECT WITH US</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ── SECTION 1: HERO ───────────────────────────── -->
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <div class="hero-logo-wrapper glass-panel" id="logo-trigger" data-hover-trigger>
+                <img src="assets/phoenix_logo.png" alt="PHOENIX Logo" class="hero-logo-img" id="hero-logo">
+                <canvas id="logo-fire-canvas"></canvas>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <a href="#next-event" class="scroll-btn" data-hover-trigger>
+                <span class="pixel-text">SCROLL_DOWN</span>
+                <div class="arrow-container">
+                    <svg class="scroll-arrow" viewBox="0 0 24 24">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" fill="currentColor"/>
+                    </svg>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ── SECTION 2: NEXT EVENT ─────────────────────── -->
+    <section id="next-event" class="event-section">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">LIVE_SPARK</h2>
+            </div>
+            <div class="event-cards">
+                <div class="event-card glass-panel">
+                    <!-- LEFT: Poster -->
+                    <div class="event-poster-side">
+                        <img src="assets/investiture ceremony.png" alt="Investiture Ceremony" class="event-poster-img">
+                    </div>
+                    <!-- RIGHT: Details -->
+                    <div class="event-details-side">
+                        <div class="status-tag glow-orange"><span class="blink">●</span> INCOMING EVENT</div>
+                        <h3 class="event-name font-orbitron">INVESTITURE CEREMONY</h3>
+                        <div class="event-info-grid">
+                            <div class="info-item">
+                                <div class="info-label">VENUE</div>
+                                <div class="info-val font-space">INDOOR AUDITORIUM</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">DATE</div>
+                                <div class="info-val font-space">19TH AUGUST 2026</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">TIME</div>
+                                <div class="info-val font-space">8:00 AM – 11:00 AM</div>
+                            </div>
+                        </div>
+                        <p class="event-desc">
+                            The PHOENIX executive board takes office. An evening of badges, pledges, and the official handover as the 2026-2027 core team is sworn in.
+                        </p>
+                        <button type="button" class="cheer-btn" id="cheer-btn" data-hover-trigger>
+                            <span class="btn-text font-orbitron">I WILL BE THERE TO CHEER</span>
+                            <span class="btn-glow"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="event-card glass-panel">
+                    <!-- LEFT: Poster -->
+                    <div class="event-poster-side">
+                        <img src="assets/Phoenix_hacks_1.0.jpeg" alt="Phoenix Hacks 1.0" class="event-poster-img">
+                    </div>
+                    <!-- RIGHT: Details -->
+                    <div class="event-details-side">
+                        <div class="status-tag glow-orange"><span class="blink">●</span> INCOMING EVENT</div>
+                        <h3 class="event-name font-orbitron">PHOENIX HACKS 1.0</h3>
+                        <div class="event-info-grid">
+                            <div class="info-item">
+                                <div class="info-label">VENUE</div>
+                                <div class="info-val font-space">INDOOR AUDITORIUM</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">DATE</div>
+                                <div class="info-val font-space">19TH &amp; 20TH AUGUST 2026</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">TIME</div>
+                                <div class="info-val font-space">12 NOON 19TH → 12 NOON 20TH</div>
+                            </div>
+                        </div>
+                        <p class="event-desc">
+                            A 24-hour build sprint. Form squads, ship a product, and battle it out for the first-ever PHOENIX hackathon crown.
+                        </p>
+                        <a href="https://phoenixhacks.vercel.app/" target="_blank" class="register-btn" data-hover-trigger>
+                            <span class="btn-text font-orbitron">REGISTER NOW</span>
+                            <span class="btn-glow"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── SECTION 3: GALLERY — HELICAL 3D SCROLL ─ -->
+    <!--  NOTE: This section is FULL-WIDTH (outside page-wrapper)  -->
+    <section id="gallery" class="gallery-section">
+
+        <!-- ONE sticky container that pins the whole viewport for the scroll duration -->
+        <div class="gallery-sticky" id="gallery-sticky">
+
+            <!-- Header row inside sticky -->
+            <div class="gallery-header-bar">
+                <div class="gallery-heading">
+                    <h2 class="section-title">CHRONICLES</h2>
+                    <span class="gallery-most-recent pixel-text">PREPARE TO GO DOWN THE TIMELINE WITH US</span>
+                </div>
+                <div class="gallery-counter">
+                    <span id="gallery-current" class="font-orbitron">01</span>
+                    <span class="gallery-sep">/</span>
+                    <span class="font-orbitron" style="opacity:0.4">04</span>
+                </div>
+            </div>
+
+            <!-- 3D Scene viewport mask -->
+            <div class="gallery-3d-scene">
+                <div class="gallery-helix" id="gallery-helix">
+                    <!-- Central cables pole that cards wrap around in 3D -->
+                    <div class="center-pole-cables">
+                        <div class="pole-cable"></div>
+                        <div class="pole-cable"></div>
+                        <div class="pole-cable"></div>
+                    </div>
+
+                    <!-- Card 1: PHOENIX HACKS 1.0 -->
+                    <a href="events/phoenixHacks1.html" class="hcard" data-hover-trigger data-index="0">
+                        <div class="hcard-inner">
+                            <div class="hcard-img-wrap">
+                                <img src="assets/Phoenix_hacks_1.0.jpeg" alt="Phoenix Hacks 1.0" class="hcard-img">
+                            </div>
+                            <div class="hcard-img-overlay"></div>
+                            <div class="hcard-meta">
+                                <div class="hcard-num pixel-text">01 —</div>
+                                <h3 class="hcard-title font-orbitron">PHOENIX<br>HACKS 1.0</h3>
+                                <p class="hcard-sub font-space">PHOENIX · REC · AUGUST 2026</p>
+                                <div class="hcard-line"></div>
+                                <div class="hcard-cta pixel-text">VIEW EVENT →</div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Card 2: INVESTITURE CEREMONY -->
+                    <a href="events/investiture.html" class="hcard" data-hover-trigger data-index="1">
+                        <div class="hcard-inner">
+                            <div class="hcard-img-wrap">
+                                <img src="assets/investiture ceremony.png" alt="Investiture Ceremony" class="hcard-img">
+                            </div>
+                            <div class="hcard-img-overlay"></div>
+                            <div class="hcard-meta">
+                                <div class="hcard-num pixel-text">02 —</div>
+                                <h3 class="hcard-title font-orbitron">INVESTITURE<br>CEREMONY</h3>
+                                <p class="hcard-sub font-space">PHOENIX · REC · AUGUST 2026</p>
+                                <div class="hcard-line"></div>
+                                <div class="hcard-cta pixel-text">VIEW EVENT →</div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Card 3: IGNITE MODULE 2 -->
+                    <a href="events/ignix2.html" class="hcard" data-hover-trigger data-index="2">
+                        <div class="hcard-inner">
+                            <div class="hcard-img-wrap">
+                                <img src="assets/ignix2.jpg" alt="Ignix Module 2" class="hcard-img">
+                            </div>
+                            <div class="hcard-img-overlay"></div>
+                            <div class="hcard-meta">
+                                <div class="hcard-num pixel-text">03 —</div>
+                                <h3 class="hcard-title font-orbitron">IGNIX MODULE<br>02</h3>
+                                <p class="hcard-sub font-space">PHOENIX · REC · JUNE 2026</p>
+                                <div class="hcard-line"></div>
+                                <div class="hcard-cta pixel-text">VIEW EVENT →</div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Card 4: IGNITE MODULE 1 -->
+                    <a href="events/ignix1.html" class="hcard" data-hover-trigger data-index="3">
+                        <div class="hcard-inner">
+                            <div class="hcard-img-wrap">
+                                <img src="assets/ignix1.jpg" alt="Ignix Module 1" class="hcard-img">
+                            </div>
+                            <div class="hcard-img-overlay"></div>
+                            <div class="hcard-meta">
+                                <div class="hcard-num pixel-text">04 —</div>
+                                <h3 class="hcard-title font-orbitron">IGNIX MODULE<br>01</h3>
+                                <p class="hcard-sub font-space">PHOENIX · REC · MAY 2026</p>
+                                <div class="hcard-line"></div>
+                                <div class="hcard-cta pixel-text">VIEW EVENT →</div>
+                            </div>
+                        </div>
+                    </a>
+
+                </div><!-- /.gallery-helix -->
+            </div><!-- /.gallery-3d-scene -->
+
+            <!-- Bottom controls row -->
+            <div class="gallery-controls">
+                <div class="gallery-progress-wrap">
+                    <div class="gallery-progress-bar" id="gallery-progress-bar"></div>
+                </div>
+                <div class="gallery-dots">
+                    <span class="gdot active" data-dot="0"></span>
+                    <span class="gdot"        data-dot="1"></span>
+                    <span class="gdot"        data-dot="2"></span>
+                    <span class="gdot"        data-dot="3"></span>
+                </div>
+            </div>
+
+        </div><!-- /.gallery-sticky -->
+    </section>
+
+    <!-- ── SECTION 4: MEMBERS ─────────────────────────── -->
+    <section id="members" class="members-section">
+        <!-- Snow Fall style local Canvas for background fire embers -->
+        <canvas id="members-embers-canvas" class="members-embers-canvas"></canvas>
+
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">CORE X BOARD</h2>
+            </div>
+            
+            <!-- Eye Ticker: three arced auto-scrolling rows of member photos -->
+            <div class="eye-ticker" id="eye-ticker">
+                <div class="eye-row" data-side="top" data-dir="right" id="eye-row-top"></div>
+                <div class="eye-row" data-side="middle" data-dir="left" id="eye-row-middle"></div>
+                <div class="eye-row" data-side="bottom" data-dir="left" id="eye-row-bottom"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ── SECTION 5: CONNECT ─────────────────────────── -->
+    <section id="connect" class="connect-section">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">CONNECT WITH US</h2>
+            </div>
+
+            <p class="connect-tagline pixel-text">Stay connected with the Phoenix community and never miss an update.</p>
+
+            <div class="connect-cards">
+                <a href="https://www.instagram.com/phoenix_rec_?igsh=MTlua3g5ZTFsM3k3eQ==" class="connect-card glass-panel" target="_blank" rel="noopener noreferrer" aria-label="Follow PHOENIX on Instagram" data-hover-trigger data-reveal>
+                    <svg class="connect-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                    <span class="connect-label font-orbitron">INSTAGRAM</span>
+                    <span class="connect-handle">@phoenix_rec_</span>
+                    <div class="connect-line"></div>
+                </a>
+
+                <a href="https://www.linkedin.com/company/phoenixrecclub/" class="connect-card glass-panel" target="_blank" rel="noopener noreferrer" aria-label="Connect with PHOENIX on LinkedIn" data-hover-trigger data-reveal>
+                    <svg class="connect-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"></path>
+                    </svg>
+                    <span class="connect-label font-orbitron">LINKEDIN</span>
+                    <span class="connect-handle">PHOENIX REC CLUB</span>
+                    <div class="connect-line"></div>
+                </a>
+
+                <a href="mailto:phoenixclub@rajalakshmi.edu.in" class="connect-card glass-panel" aria-label="Email PHOENIX Club at phoenixclub@rajalakshmi.edu.in" data-hover-trigger data-reveal>
+                    <svg class="connect-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <span class="connect-label font-orbitron">OFFICIAL EMAIL</span>
+                    <span class="connect-handle">phoenixclub@rajalakshmi.edu.in</span>
+                    <div class="connect-line"></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SVG Displacement Filters (hidden) -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+        <defs>
+            <filter id="liquid-filter-0"><feTurbulence type="fractalNoise" baseFrequency="0.04 0.03" numOctaves="1" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" id="disp-map-0"/></filter>
+        </defs>
+    </svg>
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="footer-container">
+            <div class="footer-branding font-orbitron">PHOENIX <span class="text-orange">26/27</span></div>
+            <div class="footer-tagline pixel-text">CODE . BUILD . CONQUER</div>
+            <div class="footer-copy font-space">© 2026 PHOENIX · RAJALAKSHMI ENGINEERING COLLEGE</div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
