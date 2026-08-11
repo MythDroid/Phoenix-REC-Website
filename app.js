@@ -713,56 +713,61 @@ function loopMembersEmbers(t) {
 
 // ── Eye Ticker Logic (vanilla-JS port of the eye-ticker React component) ──
 const EYE_TICKER_IMAGES = {
-    top: [
-        { src: 'assets/nitin.jpg', focusY: 15 },
-        { src: 'assets/aashira.jpg', focusY: 15 },
-        { src: 'assets/Varsha.jpeg', focusY: 15 },
-        { src: 'assets/rishika.jpg', focusY: 15 },
-        { src: 'assets/aishwarya.jpg', focusY: 15 },
+    line1: [
+        { src: 'assets/exec/nitin.jpg', focusY: 15 },
+        { src: 'assets/exec/aashira.jpg', focusY: 15 },
+        { src: 'assets/exec/Varsha.jpeg', focusY: 15 },
+        { src: 'assets/exec/rishika.jpg', focusY: 15 },
+        { src: 'assets/exec/aishwarya.jpg', focusY: 15 },
     ],
-    middle: [
-        { src: 'assets/harish.jpg', focusY: 15 },
-        { src: 'assets/jagadish.jpg', focusY: 15 },
-        { src: 'assets/mythrayee.jpg', focusY: 15 },
-        { src: 'assets/keerthana.jpg', focusY: 15 },
-        { src: 'assets/sachitha.jpg', focusY: 15 },
-        { src: 'assets/srinithi.jpg', focusY: 15 },
-        { src: 'assets/rakesh.jpg', focusY: 15 },
-        { src: 'assets/giridharan.jpg', focusY: 15 },
-        { src: 'assets/thamizh.jpg', focusY: 15 },
-        { src: 'assets/venkat.jpg', focusY: 15 },
-        { src: 'assets/abhishek.jpg', focusY: 15 },
-        { src: 'assets/pavithra.jpg', focusY: 15 },
-        { src: 'assets/sherly.jpg', focusY: 15 },
-        { src: 'assets/abhirami.jpg', focusY: 15 },
-        { src: 'assets/neranjan.jpg', focusY: 15 },
-        { src: 'assets/nithin aaron.jpg', focusY: 15 },
-        { src: 'assets/rishidhar.jpg', focusY: 15 },
-        { src: 'assets/anuradha.jpg', focusY: 15 },
-        { src: 'assets/dhanushri.jpg', focusY: 15 },
-        { src: 'assets/kamalesh.jpg', focusY: 15 },
-        { src: 'assets/nirppesh.jpg', focusY: 15 },
-        { src: 'assets/dhivagar.jpg', focusY: 15 },
-        { src: 'assets/faaiza.jpg', focusY: 15 },
-        { src: 'assets/kaushik.jpg', focusY: 15 },
-        { src: 'assets/niranjan.jpg', focusY: 15 },
-        { src: 'assets/yuvashree.jpg', focusY: 15 },
-        { src: 'assets/devika.jpg', focusY: 15 },
-        { src: 'assets/shreya.jpg', focusY: 15 },
+    line2: [
+        { src: 'assets/leads/harish.jpg', focusY: 15 },
+        { src: 'assets/leads/jagadish.jpg', focusY: 15 },
+        { src: 'assets/leads/mythrayee.jpg', focusY: 15 },
+        { src: 'assets/leads/keerthana.jpg', focusY: 15 },
+        { src: 'assets/leads/sachitha.jpg', focusY: 15 },
+        { src: 'assets/leads/srinithi.jpg', focusY: 15 },
+        { src: 'assets/leads/rakesh.jpg', focusY: 15 },
+        { src: 'assets/leads/giridharan.jpg', focusY: 15 },
+        { src: 'assets/leads/thamizh.jpg', focusY: 15 },
+        { src: 'assets/leads/venkat.jpg', focusY: 15 },
+        { src: 'assets/leads/abhishek.jpg', focusY: 15 },
+        { src: 'assets/leads/pavithra.jpg', focusY: 15 },
+        { src: 'assets/leads/sherly.jpg', focusY: 15 },
     ],
-    bottom: [
-        { src: 'assets/adharsh.jpg', focusY: 15 },
-        { src: 'assets/devesh.jpg', focusY: 15 },
-        { src: 'assets/tarun.jpg', focusY: 15 },
+    line3: [
+        { src: 'assets/jnrs/abhirami.jpg', focusY: 15 },
+        { src: 'assets/jnrs/neranjan.jpg', focusY: 15 },
+        { src: 'assets/jnrs/nithin aaron.jpg', focusY: 15 },
+        { src: 'assets/jnrs/rishidhar.jpg', focusY: 15 },
+        { src: 'assets/jnrs/anuradha.jpg', focusY: 15 },
+        { src: 'assets/jnrs/dhanushri.jpg', focusY: 15 },
+        { src: 'assets/jnrs/kamalesh.jpg', focusY: 15 },
+        { src: 'assets/jnrs/nirppesh.jpg', focusY: 15 },
+        { src: 'assets/jnrs/dhivagar.jpg', focusY: 15 },
+        { src: 'assets/jnrs/faaiza.jpg', focusY: 15 },
+        { src: 'assets/jnrs/kaushik.jpg', focusY: 15 },
+        { src: 'assets/jnrs/niranjan.jpg', focusY: 15 },
+        { src: 'assets/jnrs/yuvashree.jpg', focusY: 15 },
+        { src: 'assets/jnrs/devika.jpg', focusY: 15 },
+        { src: 'assets/jnrs/shreya.jpg', focusY: 15 },
+        { src: 'assets/jnrs/vamshika.jpg', focusY: 15 },
+        { src: 'assets/jnrs/visagan.jpg', focusY: 15 },
+    ],
+    line4: [
+        { src: 'assets/mentor/adharsh.jpg', focusY: 15 },
+        { src: 'assets/mentor/devesh.jpg', focusY: 15 },
+        { src: 'assets/mentor/tarun.jpg', focusY: 15 },
     ],
 };
 
 const EYE_TICKER_ROW_CONFIG = {
-    top:    { bow: -1, arc: 63, gap: 32, dir: 'right', bandIndex: 0, static: true },
-    middle: { bow: 0,  arc: 63, gap: 32, dir: 'left',  bandIndex: 1 },
-    bottom: { bow: 1,  arc: 63, gap: 32, dir: 'right', bandIndex: 2, static: true },
+    line1: { bow: -1,   arc: 63, gap: 32, dir: 'right', bandIndex: 0, static: true },
+    line2: { bow: -0.3, arc: 63, gap: 32, dir: 'left',  bandIndex: 1 },
+    line3: { bow: 0.3,  arc: 63, gap: 32, dir: 'right', bandIndex: 2 },
+    line4: { bow: 1,    arc: 63, gap: 32, dir: 'left',  bandIndex: 3, static: true },
 };
-const EYE_TICKER_ROW_COUNT = 3;
+const EYE_TICKER_ROW_COUNT = 4;
 
 const EYE_TICKER_SPEED = 20;      // base speed unit, matches JSX default
 const EYE_TICKER_PX_PER_SPEED = 14;
@@ -914,9 +919,10 @@ class EyeTickerRow {
 const eyeTickerEl = document.getElementById('eye-ticker');
 if (eyeTickerEl) {
     const rows = [
-        new EyeTickerRow(document.getElementById('eye-row-top'), 'top', EYE_TICKER_IMAGES.top),
-        new EyeTickerRow(document.getElementById('eye-row-middle'), 'middle', EYE_TICKER_IMAGES.middle),
-        new EyeTickerRow(document.getElementById('eye-row-bottom'), 'bottom', EYE_TICKER_IMAGES.bottom),
+        new EyeTickerRow(document.getElementById('eye-row-line1'), 'line1', EYE_TICKER_IMAGES.line1),
+        new EyeTickerRow(document.getElementById('eye-row-line2'), 'line2', EYE_TICKER_IMAGES.line2),
+        new EyeTickerRow(document.getElementById('eye-row-line3'), 'line3', EYE_TICKER_IMAGES.line3),
+        new EyeTickerRow(document.getElementById('eye-row-line4'), 'line4', EYE_TICKER_IMAGES.line4),
     ];
     rows.forEach((row) => row.start());
 

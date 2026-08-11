@@ -635,12 +635,12 @@ body.is-scrolled .nav-logo {
     z-index: 0;
 }
 
-/* ── Eye Ticker: three arced auto-scrolling rows ─────── */
+/* ── Eye Ticker: four arced auto-scrolling rows ─────── */
 .eye-ticker {
     position: relative;
     width: 100%;
-    height: 900px;
-    max-height: 85vh;
+    height: 1200px;
+    max-height: 95vh;
     overflow: hidden;
     z-index: 2;
     -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
@@ -700,11 +700,11 @@ body.is-scrolled .nav-logo {
 }
 
 @media (max-width: 768px) {
-    .eye-ticker { height: 620px; }
+    .eye-ticker { height: 800px; }
 }
 
 @media (max-width: 480px) {
-    .eye-ticker { height: 520px; }
+    .eye-ticker { height: 650px; }
 }
 
 /* ── SECTION 5: CONNECT ──────────────────────────────── */
