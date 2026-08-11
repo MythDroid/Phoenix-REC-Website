@@ -36,15 +36,31 @@
             <a href="#hero" class="nav-logo" data-hover-trigger>
                 <img src="assets/phoenix_logo.png" alt="PHOENIX" class="nav-logo-img">
             </a>
-            <nav class="nav-links">
+            <nav class="nav-links" id="nav-links">
                 <a href="#hero"       class="nav-link active" data-hover-trigger><span class="nav-num">01</span> HOME</a>
                 <a href="#next-event" class="nav-link"        data-hover-trigger><span class="nav-num">02</span> LIVE_SPARK</a>
                 <a href="#gallery"    class="nav-link"        data-hover-trigger><span class="nav-num">03</span> CHRONICLES</a>
                 <a href="#members"    class="nav-link"        data-hover-trigger><span class="nav-num">04</span> CORE_X_BOARD</a>
                 <a href="#connect"    class="nav-link"        data-hover-trigger><span class="nav-num">05</span> CONNECT WITH US</a>
             </nav>
+            <!-- Hamburger — shown only on mobile -->
+            <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </header>
+
+    <!-- Mobile Drawer Overlay -->
+    <div class="mobile-nav-overlay" id="mobile-nav-overlay">
+        <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">✕</button>
+        <nav class="mobile-nav-links">
+            <a href="#hero"       class="mobile-nav-link">01 — HOME</a>
+            <a href="#next-event" class="mobile-nav-link">02 — LIVE_SPARK</a>
+            <a href="#gallery"    class="mobile-nav-link">03 — CHRONICLES</a>
+            <a href="#members"    class="mobile-nav-link">04 — CORE_X_BOARD</a>
+            <a href="#connect"    class="mobile-nav-link">05 — CONNECT WITH US</a>
+        </nav>
+    </div>
 
     <!-- ── SECTION 1: HERO ───────────────────────────── -->
     <section id="hero" class="hero-section">

@@ -826,21 +826,182 @@ body.is-scrolled .nav-logo {
     to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ── HAMBURGER BUTTON ────────────────────────────────── */
+.nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 1100;
+}
+.nav-hamburger span {
+    display: block;
+    width: 26px;
+    height: 2px;
+    background: var(--text-main);
+    border-radius: 2px;
+    transition: transform .3s, opacity .3s, background .3s;
+}
+.nav-hamburger.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.is-open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── MOBILE DRAWER ───────────────────────────────────── */
+.mobile-nav-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    background: rgba(5, 3, 3, 0.97);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .35s ease;
+}
+.mobile-nav-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+}
+.mobile-nav-close {
+    position: absolute;
+    top: 22px;
+    right: 24px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 8px;
+    transition: color .3s;
+}
+.mobile-nav-close:hover { color: var(--accent-orange); }
+.mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+}
+.mobile-nav-link {
+    font-family: var(--font-orbitron);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color .3s, text-shadow .3s;
+}
+.mobile-nav-link:hover {
+    color: var(--accent-orange);
+    text-shadow: 0 0 12px rgba(255, 81, 0, 0.5);
+}
+
 /* ── RESPONSIVE ──────────────────────────────────────── */
 @media (max-width: 768px) {
-    .main-header { padding: 14px 20px; }
+    /* — Nav — */
+    .main-header { padding: 12px 20px; }
     .nav-links    { display: none; }
-    .event-card   { flex-direction: column; }
-    .event-poster-side { border-right: none; border-bottom: 1px solid var(--border-color); min-height: 240px; }
-    .event-info-grid { grid-template-columns: 1fr; }
-    .gallery-header-bar { padding: 16px 40px 10px; }
-    .gallery-track { padding: 0 24px; gap: 20px; }
-    .hcard { width: 70vw; height: 42vh; }
-    .gallery-controls { padding: 10px 24px 16px; }
-    .connect-cards { grid-template-columns: 1fr; gap: 24px; max-width: 420px; }
+    .nav-hamburger { display: flex; }
+    .mobile-nav-overlay { display: flex; }
 
+    /* — Section shared — */
+    .section-container { padding: 0 20px; }
+    .section-title { font-size: 1.3rem; }
+
+    /* — Hero — */
+    .hero-content { padding: 0 16px; }
+
+    /* — Events — */
+    .event-section { padding: 80px 0; min-height: unset; }
+    .event-card   { flex-direction: column; min-height: unset; }
+    .event-poster-side {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        min-height: 220px;
+        flex: unset;
+        height: 220px;
+    }
+    .event-details-side { flex: unset; padding: 24px 20px; }
+    .event-name { font-size: 1.4rem; }
+    .event-info-grid { grid-template-columns: 1fr; gap: 14px; }
+    .register-btn,
+    .cheer-btn    { padding: 13px 22px; font-size: .8rem; }
+
+    /* — Gallery — */
+    .gallery-header-bar { padding: 16px 20px 10px; }
+    .gallery-header-bar .section-title { font-size: 1.1rem; }
+    .gallery-most-recent { font-size: .6rem; letter-spacing: 2px; }
+
+    /* — Members — */
+    .members-section { padding: 80px 0 100px; }
+    .eye-ticker { height: 800px; max-height: 90vh; }
+
+    /* — Connect — */
+    .connect-section { padding: 80px 0; }
+    .connect-cards { grid-template-columns: 1fr; gap: 20px; max-width: 380px; }
+    .connect-card  { padding: 40px 22px; }
+
+    /* — Footer — */
+    .footer-branding { font-size: 1.1rem; }
 }
+
 @media (max-width: 480px) {
-    .event-details-side { padding: 20px; }
-    .event-name { font-size: 1.5rem; }
+    /* — Nav — */
+    .main-header { padding: 10px 16px; }
+    .nav-logo-img { width: 72px; }
+
+    /* — Section shared — */
+    .section-container { padding: 0 14px; }
+    .section-header { margin-bottom: 32px; }
+    .section-title { font-size: 1.1rem; letter-spacing: 1px; }
+
+    /* — Hero — */
+    .hero-section { padding-top: 70px; }
+
+    /* — Events — */
+    .event-section { padding: 60px 0; }
+    .event-poster-side { height: 180px; min-height: 180px; }
+    .event-details-side { padding: 18px 16px; }
+    .event-name { font-size: 1.2rem; }
+    .event-desc { font-size: .84rem; margin-bottom: 22px; }
+    .event-info-grid { gap: 10px; margin-bottom: 20px; }
+    .info-val { font-size: .82rem; }
+    .register-btn,
+    .cheer-btn { width: 100%; text-align: center; }
+
+    /* — Gallery — */
+    .gallery-section { height: 350vh; }
+    .gallery-header-bar { padding: 12px 14px 8px; }
+    .gallery-most-recent { display: none; }
+    .gallery-controls { padding: 8px 14px 14px; }
+
+    /* — Members — */
+    .members-section { padding: 60px 0 80px; }
+    .eye-ticker { height: 650px; max-height: 85vh; }
+
+    /* — Connect — */
+    .connect-section { padding: 60px 0 80px; }
+    .connect-tagline { font-size: .7rem; margin-bottom: 36px; }
+    .connect-cards { max-width: 100%; padding: 0 14px; }
+    .connect-card { padding: 32px 18px; gap: 12px; }
+    .connect-icon { width: 36px; height: 36px; }
+    .connect-label { font-size: .75rem; }
+    .connect-handle { font-size: .65rem; }
+
+    /* — Footer — */
+    .footer-section { padding: 30px 16px; }
+    .footer-branding { font-size: 1rem; }
+    .footer-tagline  { font-size: .7rem; }
+    .footer-copy     { font-size: .64rem; }
+
+    /* — Mobile nav drawer link size — */
+    .mobile-nav-link { font-size: .95rem; }
 }

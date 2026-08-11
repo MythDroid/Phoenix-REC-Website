@@ -69,6 +69,36 @@ if (!isTouchDevice) {
 
 
 // ═══════════════════════════════════════════════════════
+// 1b. MOBILE HAMBURGER NAV
+// ═══════════════════════════════════════════════════════
+const hamburgerBtn  = document.getElementById('nav-hamburger');
+const mobileOverlay = document.getElementById('mobile-nav-overlay');
+const mobileClose   = document.getElementById('mobile-nav-close');
+
+function openMobileNav() {
+    if (!mobileOverlay || !hamburgerBtn) return;
+    mobileOverlay.classList.add('is-open');
+    hamburgerBtn.classList.add('is-open');
+    hamburgerBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+}
+function closeMobileNav() {
+    if (!mobileOverlay || !hamburgerBtn) return;
+    mobileOverlay.classList.remove('is-open');
+    hamburgerBtn.classList.remove('is-open');
+    hamburgerBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+}
+
+if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMobileNav);
+if (mobileClose)  mobileClose.addEventListener('click', closeMobileNav);
+// Close drawer on any mobile nav link click
+document.querySelectorAll('.mobile-nav-link').forEach(link => {
+    link.addEventListener('click', closeMobileNav);
+});
+
+
+// ═══════════════════════════════════════════════════════
 // 2. BACKGROUND CANVAS — SPOOKY CABLES + EMBERS
 //    Fixed: covers the FULL viewport at all times
 // ═══════════════════════════════════════════════════════
