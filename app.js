@@ -1,5 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+// Detect touch/no-mouse devices once, reused by every mouse-only effect below
+const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+
+// Shared "is the tab actually visible" flag — every background RAF loop
+// below checks this so nothing keeps animating (and burning battery/CPU)
+// while the tab is in the background.
+let pageIsVisible = !document.hidden;
+document.addEventListener('visibilitychange', () => { pageIsVisible = !document.hidden; });
+
 // ═══════════════════════════════════════════════════════
 // 0. INTRO VIDEO — play on load, then reveal the site
 // ═══════════════════════════════════════════════════════
@@ -34,22 +43,29 @@ const cursorInner = document.querySelector('.cursor-inner');
 const cursorOuter = document.querySelector('.cursor-outer');
 let mx = 0, my = 0, ox = 0, oy = 0;
 
-window.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursorInner.style.left = mx + 'px';
-    cursorInner.style.top  = my + 'px';
-});
-(function cursorLoop() {
-    ox += (mx - ox) * 0.14;
-    oy += (my - oy) * 0.14;
-    cursorOuter.style.left = ox + 'px';
-    cursorOuter.style.top  = oy + 'px';
-    requestAnimationFrame(cursorLoop);
-})();
-document.querySelectorAll('[data-hover-trigger]').forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('hovering-interactive'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('hovering-interactive'));
-});
+// Skip the whole custom-cursor system on touch devices — there's no
+// mouse to track, so this was previously running forever for nothing.
+if (!isTouchDevice) {
+    window.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        cursorInner.style.left = mx + 'px';
+        cursorInner.style.top  = my + 'px';
+    });
+    (function cursorLoop() {
+        ox += (mx - ox) * 0.14;
+        oy += (my - oy) * 0.14;
+        cursorOuter.style.left = ox + 'px';
+        cursorOuter.style.top  = oy + 'px';
+        requestAnimationFrame(cursorLoop);
+    })();
+    document.querySelectorAll('[data-hover-trigger]').forEach(el => {
+        el.addEventListener('mouseenter', () => document.body.classList.add('hovering-interactive'));
+        el.addEventListener('mouseleave', () => document.body.classList.remove('hovering-interactive'));
+    });
+} else {
+    if (cursorInner) cursorInner.style.display = 'none';
+    if (cursorOuter) cursorOuter.style.display = 'none';
+}
 
 
 // ═══════════════════════════════════════════════════════
@@ -194,6 +210,36 @@ function drawCables() {
     });
 }
 
+// ── Shared glow-dot sprite cache ────────────────────────
+// canvas.shadowBlur recomputes a soft blur in software on every single
+// shape, every frame — extremely expensive with 100+ particles on screen
+// at once. Pre-rendering the same glow once per color into a small
+// offscreen canvas and drawImage-ing it instead gives the identical
+// visual result for a fraction of the cost.
+const glowSpriteCache = {};
+function getGlowSprite(color) {
+    if (glowSpriteCache[color]) return glowSpriteCache[color];
+    const size = 64;
+    const c = document.createElement('canvas');
+    c.width = c.height = size;
+    const ctx = c.getContext('2d');
+    const grad = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+    grad.addColorStop(0,    color);
+    grad.addColorStop(0.35, color);
+    grad.addColorStop(1,    'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, size, size);
+    glowSpriteCache[color] = c;
+    return c;
+}
+function drawGlowDot(ctx, x, y, r, color, alpha) {
+    const sprite = getGlowSprite(color);
+    const size = r * 6; // matches the visual spread of the old shadowBlur radius
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(sprite, x - size/2, y - size/2, size, size);
+    ctx.restore();
+}
 
 // ── Ember Particles ────────────────────────────────────
 // Embers spawn throughout the full canvas height so they
@@ -227,16 +273,8 @@ class Ember {
     }
     draw() {
         const fade = 1 - this.life / this.maxLife;
-        bgCtx.save();
-        bgCtx.globalAlpha = this.a * fade;
         const col = this.gold ? '#ffaa00' : '#ff5100';
-        bgCtx.fillStyle   = col;
-        bgCtx.shadowColor = col;
-        bgCtx.shadowBlur  = this.r * 3;
-        bgCtx.beginPath();
-        bgCtx.arc(this.x, this.y, this.r, 0, Math.PI*2);
-        bgCtx.fill();
-        bgCtx.restore();
+        drawGlowDot(bgCtx, this.x, this.y, this.r, col, this.a * fade);
     }
 }
 
@@ -273,15 +311,7 @@ class CursorEmber {
     }
     draw() {
         const fade = 1 - this.life / this.maxLife;
-        bgCtx.save();
-        bgCtx.globalAlpha = this.a * fade;
-        bgCtx.fillStyle   = this.col;
-        bgCtx.shadowColor = this.col;
-        bgCtx.shadowBlur  = this.r * 3;
-        bgCtx.beginPath();
-        bgCtx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        bgCtx.fill();
-        bgCtx.restore();
+        drawGlowDot(bgCtx, this.x, this.y, this.r, this.col, this.a * fade);
     }
 }
 
@@ -290,7 +320,7 @@ let frameCtr = 0;        // frame counter for throttling
 
 // ── Main background render loop ────────────────────────
 (function animBg() {
-    if (!bgW) { requestAnimationFrame(animBg); return; }
+    if (!bgW || !pageIsVisible) { requestAnimationFrame(animBg); return; }
 
     bgCtx.clearRect(0, 0, bgW, bgH);
 
@@ -389,22 +419,32 @@ class LogoSpark {
         if (this.life >= this.maxLife) this.init();
     }
     draw() {
-        logoCtx.save();
-        logoCtx.globalAlpha = this.a * (1 - this.life/this.maxLife);
-        logoCtx.fillStyle = this.col;
-        logoCtx.shadowColor = this.col; logoCtx.shadowBlur = this.r*2;
-        logoCtx.beginPath(); logoCtx.arc(this.x, this.y, this.r, 0, Math.PI*2); logoCtx.fill();
-        logoCtx.restore();
+        drawGlowDot(logoCtx, this.x, this.y, this.r, this.col, this.a * (1 - this.life/this.maxLife));
     }
 }
 
 const logoSparks = Array.from({length: 120}, (_, i) => new LogoSpark(i%2===0?'L':'R'));
 
+// Only run the logo-fire loop while the hero is actually on screen —
+// previously this kept animating 120 particles forever, even scrolled
+// all the way down at the footer.
+let heroInView = true;
+const heroSectionEl = document.getElementById('hero');
+if (heroSectionEl && 'IntersectionObserver' in window) {
+    const heroIO = new IntersectionObserver(
+        entries => { heroInView = entries[0].isIntersecting; },
+        { rootMargin: '200px 0px' }
+    );
+    heroIO.observe(heroSectionEl);
+}
+
 setTimeout(() => {
     resizeLogo();
     (function animLogo() {
-        logoCtx.clearRect(0, 0, lw, lh);
-        logoSparks.forEach(p => { p.update(); p.draw(); });
+        if (pageIsVisible && heroInView) {
+            logoCtx.clearRect(0, 0, lw, lh);
+            logoSparks.forEach(p => { p.update(); p.draw(); });
+        }
         requestAnimationFrame(animLogo);
     })();
 }, 600);
@@ -432,6 +472,21 @@ const galBar     = document.getElementById('gallery-progress-bar');
 const galCurrent = document.getElementById('gallery-current');
 const galDots    = document.querySelectorAll('.gdot');
 const hcards     = document.querySelectorAll('.hcard');
+
+// Only run the helix's per-frame 3D transform math while the gallery is
+// near the viewport — this was previously recalculating rotateY/translateY
+// on every single frame of the entire page lifetime, visible or not,
+// which is the main cause of scroll stutter.
+let galInView = false;
+if (galSection && 'IntersectionObserver' in window) {
+    const galIO = new IntersectionObserver(
+        entries => { galInView = entries[0].isIntersecting; },
+        { rootMargin: '800px 0px' }
+    );
+    galIO.observe(galSection);
+} else {
+    galInView = true;
+}
 
 const LERP   = 0.08;
 let targetX  = 0;  // Target progress (0 to 1000)
@@ -562,51 +617,60 @@ requestAnimationFrame(() => {
 });
 
 if (typeof ResizeObserver !== 'undefined') {
+    // Debounced — document.body can resize more often than expected
+    // (image loads, font swaps, etc.), and each firing re-walks the DOM
+    // and re-sets transforms on every card.
+    let bodyResizeTimer = null;
     const ro = new ResizeObserver(() => {
-        cacheGalleryBounds();
-        onScroll();
+        clearTimeout(bodyResizeTimer);
+        bodyResizeTimer = setTimeout(() => {
+            cacheGalleryBounds();
+            onScroll();
+        }, 120);
     });
     ro.observe(document.body);
 }
 
 // ── RAF loop: Helical 3D Easing + Velocity Tilt ────────
 (function galLoop() {
-    // Lerp progress
-    currentX += (targetX - currentX) * LERP;
+    if (galInView && pageIsVisible) {
+        // Lerp progress
+        currentX += (targetX - currentX) * LERP;
 
-    const velocity = currentX - lastX;
-    lastX = currentX;
+        const velocity = currentX - lastX;
+        lastX = currentX;
 
-    const progress = currentX / 1000;
+        const progress = currentX / 1000;
 
-    // 1. Rotation: helix rotates by -270 degrees total
-    const rotation = progress * -270;
+        // 1. Rotation: helix rotates by -270 degrees total
+        const rotation = progress * -270;
 
-    // 2. Vertical position: translates helix up so current card is centered
-    // At progress=0, centers Card 0 (y = -1.5 * spacing) -> helix translateY = 1.5 * spacing
-    // At progress=1, centers Card 3 (y = 1.5 * spacing) -> helix translateY = -1.5 * spacing
-    const helixY = (1.5 - progress * 3) * helixSpacing;
+        // 2. Vertical position: translates helix up so current card is centered
+        // At progress=0, centers Card 0 (y = -1.5 * spacing) -> helix translateY = 1.5 * spacing
+        // At progress=1, centers Card 3 (y = 1.5 * spacing) -> helix translateY = -1.5 * spacing
+        const helixY = (1.5 - progress * 3) * helixSpacing;
 
-    // 3. Velocity-based X-axis Tilt (Active Theory signature)
-    // The entire helix leans forward/backward when scrolling fast
-    const tiltX = Math.max(-10, Math.min(10, velocity * 0.25));
+        // 3. Velocity-based X-axis Tilt (Active Theory signature)
+        // The entire helix leans forward/backward when scrolling fast
+        const tiltX = Math.max(-10, Math.min(10, velocity * 0.25));
 
-    // Apply composite 3D transform to parent helix
-    galHelix.style.transform = `rotateX(${tiltX}deg) rotateY(${rotation}deg) translateY(${helixY}px)`;
+        // Apply composite 3D transform to parent helix
+        galHelix.style.transform = `rotateX(${tiltX}deg) rotateY(${rotation}deg) translateY(${helixY}px)`;
 
-    // Smooth UI updates for indicators
-    if (galBar) {
-        galBar.style.width = (progress * 100) + '%';
+        // Smooth UI updates for indicators
+        if (galBar) {
+            galBar.style.width = (progress * 100) + '%';
+        }
+
+        const activeI = Math.max(0, Math.min(hcards.length - 1, Math.round(progress * (hcards.length - 1))));
+        if (galCurrent) {
+            galCurrent.textContent = String(activeI + 1).padStart(2, '0');
+        }
+
+        galDots.forEach((d, i) => {
+            d.classList.toggle('active', i === activeI);
+        });
     }
-    
-    const activeI = Math.max(0, Math.min(hcards.length - 1, Math.round(progress * (hcards.length - 1))));
-    if (galCurrent) {
-        galCurrent.textContent = String(activeI + 1).padStart(2, '0');
-    }
-    
-    galDots.forEach((d, i) => {
-        d.classList.toggle('active', i === activeI);
-    });
 
     requestAnimationFrame(galLoop);
 })();
@@ -678,16 +742,22 @@ function drawMembersEmbers() {
     mCtx.clearRect(0, 0, mW, mH);
     for (let i = 0; i < mFlakes.length; i++) {
         const f = mFlakes[i];
-        mCtx.save();
-        mCtx.globalAlpha = f.alpha;
-        mCtx.fillStyle = f.color;
-        mCtx.shadowColor = f.color;
-        mCtx.shadowBlur = f.r * 2.5;
-        mCtx.beginPath();
-        mCtx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-        mCtx.fill();
-        mCtx.restore();
+        drawGlowDot(mCtx, f.x, f.y, f.r, f.color, f.alpha);
     }
+}
+
+// Only run the members-embers loop while the CORE X BOARD section is
+// near the viewport — previously ran 120 particles forever on every page.
+let membersInView = false;
+const membersSectionEl = document.getElementById('members');
+if (membersSectionEl && 'IntersectionObserver' in window) {
+    const membersIO = new IntersectionObserver(
+        entries => { membersInView = entries[0].isIntersecting; },
+        { rootMargin: '600px 0px' }
+    );
+    membersIO.observe(membersSectionEl);
+} else {
+    membersInView = true;
 }
 
 function loopMembersEmbers(t) {
@@ -695,19 +765,21 @@ function loopMembersEmbers(t) {
         requestAnimationFrame(loopMembersEmbers);
         return;
     }
-    for (let i = 0; i < mFlakes.length; i++) {
-        const f = mFlakes[i];
-        f.y += f.vy;
-        f.x += f.vx + Math.sin(t * 0.0012 + f.phase) * f.sway;
-        
-        if (f.y + f.r < 0) {
-            f.y = mH + f.r;
-            f.x = Math.random() * mW;
+    if (pageIsVisible && membersInView) {
+        for (let i = 0; i < mFlakes.length; i++) {
+            const f = mFlakes[i];
+            f.y += f.vy;
+            f.x += f.vx + Math.sin(t * 0.0012 + f.phase) * f.sway;
+
+            if (f.y + f.r < 0) {
+                f.y = mH + f.r;
+                f.x = Math.random() * mW;
+            }
+            if (f.x < -f.r) f.x = mW + f.r;
+            else if (f.x > mW + f.r) f.x = -f.r;
         }
-        if (f.x < -f.r) f.x = mW + f.r;
-        else if (f.x > mW + f.r) f.x = -f.r;
+        drawMembersEmbers();
     }
-    drawMembersEmbers();
     requestAnimationFrame(loopMembersEmbers);
 }
 
@@ -885,18 +957,25 @@ class EyeTickerRow {
         const dt = (now - this.lastTime) / 1000;
         this.lastTime = now;
 
-        const slowed = this.hoveredIndex !== -1;
-        const paceFactor = slowed ? EYE_TICKER_HOVER_SLOWDOWN : 1;
-        const pace = Math.max(1, EYE_TICKER_SPEED) * EYE_TICKER_PX_PER_SPEED * EYE_TICKER_SPEED_MULTIPLIER * paceFactor;
+        // Skip the (otherwise-forever) per-frame work while the section
+        // isn't visible or the tab is backgrounded — still keep the RAF
+        // loop alive so it resumes smoothly once back in view.
+        if (pageIsVisible && membersInView) {
+            const slowed = this.hoveredIndex !== -1;
+            const paceFactor = slowed ? EYE_TICKER_HOVER_SLOWDOWN : 1;
+            const pace = Math.max(1, EYE_TICKER_SPEED) * EYE_TICKER_PX_PER_SPEED * EYE_TICKER_SPEED_MULTIPLIER * paceFactor;
 
-        this.travel += dt * pace * this.dirSign;
+            this.travel += dt * pace * this.dirSign;
 
-        for (let i = 0; i < this.cardEls.length; i++) {
-            const el = this.cardEls[i];
-            const { x, y, visible, z } = this.placeAt(i, this.travel);
-            el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-            el.style.opacity = visible ? '1' : '0';
-            if (i !== this.hoveredIndex) el.style.zIndex = String(z);
+            for (let i = 0; i < this.cardEls.length; i++) {
+                const el = this.cardEls[i];
+                const { x, y, visible, z } = this.placeAt(i, this.travel);
+                el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                el.style.opacity = visible ? '1' : '0';
+                if (i !== this.hoveredIndex) el.style.zIndex = String(z);
+            }
+        } else {
+            this.lastTime = now; // avoid a large dt jump when it resumes
         }
 
         this.frame = requestAnimationFrame((t) => this.tick(t));
@@ -985,7 +1064,40 @@ requestAnimationFrame(loopMembersEmbers);
 (function initKineticGrid() {
     const kCanvas = document.getElementById('kinetic-grid-canvas');
     if (!kCanvas) return;
+
+    // This entire effect only reacts to a mouse cursor, which doesn't
+    // exist on touch devices — building the grid + running its physics
+    // and draw loop there was previously pure wasted work.
+    if (window.matchMedia('(pointer: coarse)').matches) {
+        kCanvas.style.display = 'none';
+        return;
+    }
+
     const kCtx = kCanvas.getContext('2d');
+
+    // Local glow-sprite cache (this IIFE runs standalone, before
+    // DOMContentLoaded, so it doesn't share the one defined below)
+    const kGlowCache = {};
+    function kGlowDot(x, y, r, color, alpha) {
+        if (!kGlowCache[color]) {
+            const size = 32;
+            const c = document.createElement('canvas');
+            c.width = c.height = size;
+            const gctx = c.getContext('2d');
+            const grad = gctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+            grad.addColorStop(0, color);
+            grad.addColorStop(0.35, color);
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            gctx.fillStyle = grad;
+            gctx.fillRect(0, 0, size, size);
+            kGlowCache[color] = c;
+        }
+        const size = r * 6;
+        kCtx.save();
+        kCtx.globalAlpha = alpha;
+        kCtx.drawImage(kGlowCache[color], x - size/2, y - size/2, size, size);
+        kCtx.restore();
+    }
 
     const KG = 45;    // grid spacing in px
     const KR = 280;   // cursor attraction radius in px
@@ -1098,15 +1210,20 @@ requestAnimationFrame(loopMembersEmbers);
             const prox = kMouse.active
                 ? Math.max(0, 1 - Math.sqrt((kMouse.x - d.x) ** 2 + (kMouse.y - d.y) ** 2) / KR)
                 : 0;
-            kCtx.globalAlpha = prox * 1.0;           // invisible at rest
-            kCtx.fillStyle   = '#ff5100';
-            kCtx.shadowColor = '#ff5100';
-            kCtx.shadowBlur  = prox > 0.05 ? prox * 12 : 0;
-            kCtx.beginPath();
-            kCtx.arc(d.x, d.y, 0.6 + prox * 3.2, 0, Math.PI * 2);
-            kCtx.fill();
+            if (prox <= 0) continue; // invisible at rest — skip entirely instead of drawing at alpha 0
+            const r = 0.6 + prox * 3.2;
+            if (prox > 0.05) {
+                kGlowDot(d.x, d.y, r, '#ff5100', prox);
+            } else {
+                kCtx.save();
+                kCtx.globalAlpha = prox;
+                kCtx.fillStyle = '#ff5100';
+                kCtx.beginPath();
+                kCtx.arc(d.x, d.y, r, 0, Math.PI * 2);
+                kCtx.fill();
+                kCtx.restore();
+            }
         }
-        kCtx.shadowBlur = 0;
 
         // Draw cursor trail
         kCtx.lineCap = 'round'; kCtx.lineJoin = 'round';
