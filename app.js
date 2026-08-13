@@ -679,318 +679,253 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 // ═══════════════════════════════════════════════════════
-// 6. MEMBERS SECTION — HOVER IMAGE REVEAL & EMBERS BACKGROUND
+// 6. MEMBERS SECTION — CODEX OF DOMAINS
 // ═══════════════════════════════════════════════════════
-const mCanvas = document.getElementById('members-embers-canvas');
-const mCtx = mCanvas.getContext('2d');
-let mW = 0, mH = 0;
-const mDpr = Math.min(window.devicePixelRatio || 1, 2);
-let mFlakes = [];
+const DOMAINS = [
+  {
+    key: 'executives',
+    title: 'Executives',
+    motto: 'Those who carry the club\'s fire and answer for its direction.',
+    members: [
+      { name: 'Nitin', role: 'President', img: 'assets/exec/nitin.webp' },
+      { name: 'Aashira', role: 'Vice President', img: 'assets/exec/aashira.webp' },
+      { name: 'Varsha', role: 'Secretary', img: 'assets/exec/Varsha.webp' },
+      { name: 'Rishika', role: 'Treasurer', img: 'assets/exec/rishika.webp' },
+      { name: 'Aishwarya', role: 'Executive', img: 'assets/exec/aishwarya.webp' }
+    ]
+  },
+  {
+    key: 'tech',
+    title: 'Tech Domain',
+    motto: 'Where ideas are forged into code, and code into things that ship.',
+    members: [
+      { name: 'Harish', role: 'Domain Lead', img: 'assets/leads/harish.webp' },
+      { name: 'Jagadish', role: 'Tech Lead', img: 'assets/leads/jagadish.webp' },
+      { name: 'Mythrayee', role: 'Tech Lead', img: 'assets/leads/mythrayee.webp' },
+      { name: 'Nerengan', role: 'Junior', img: 'assets/jnrs/neranjan.webp' },
+      { name: 'Abhirami', role: 'Junior', img: 'assets/jnrs/abhirami.webp' },
+      { name: 'Rishidar', role: 'Junior', img: 'assets/jnrs/rishidhar.webp' },
+      { name: 'Nitin aron', role: 'Junior', img: 'assets/jnrs/nithin aaron.webp' }
+    ]
+  },
+  {
+    key: 'event',
+    title: 'Event Domain',
+    motto: 'The hands that turn a date on a calendar into a room full of people.',
+    members: [
+      { name: 'Sachitha', role: 'Domain Lead', img: 'assets/leads/sachitha.webp' },
+      { name: 'Sriniti', role: 'Event Lead', img: 'assets/leads/srinithi.webp' },
+      { name: 'Keerthana', role: 'Event Lead', img: 'assets/leads/keerthana.webp' },
+      { name: 'Anuradha', role: 'Junior', img: 'assets/jnrs/anuradha.webp' },
+      { name: 'Dhanushri', role: 'Junior', img: 'assets/jnrs/dhanushri.webp' },
+      { name: 'Nirpesh', role: 'Junior', img: 'assets/jnrs/nirppesh.webp' },
+      { name: 'Kamaleshwaran', role: 'Junior', img: 'assets/jnrs/kamalesh.webp' }
+    ]
+  },
+  {
+    key: 'pr',
+    title: 'PR Domain',
+    motto: 'The voice that carries Phoenix beyond its own walls.',
+    members: [
+      { name: 'Abhishek', role: 'Domain Lead', img: 'assets/leads/abhishek.webp' },
+      { name: 'Sherly', role: 'PR Lead', img: 'assets/leads/sherly.webp' },
+      { name: 'Pavithra', role: 'PR Lead', img: 'assets/leads/pavithra.webp' },
+      { name: 'Vamshika', role: 'Junior', img: 'assets/jnrs/vamshika.webp' },
+      { name: 'Sherya', role: 'Junior', img: 'assets/jnrs/shreya.webp' },
+      { name: 'Visagan', role: 'Junior', img: 'assets/jnrs/visagan.webp' },
+      { name: 'Devika', role: 'Junior', img: 'assets/jnrs/devika.webp' }
+    ]
+  },
+  {
+    key: 'design',
+    title: 'Design Domain',
+    motto: 'Every poster, pixel, and palette that gives the club its face.',
+    members: [
+      { name: 'Rakesh', role: 'Domain Lead', img: 'assets/leads/rakesh.webp' },
+      { name: 'Giridharan', role: 'Design Lead', img: 'assets/leads/giridharan.webp' },
+      { name: 'Faiza', role: 'Junior', img: 'assets/jnrs/faaiza.webp' },
+      { name: 'Kaushik', role: 'Junior', img: 'assets/jnrs/kaushik.webp' }
+    ]
+  },
+  {
+    key: 'video',
+    title: 'Video Domain',
+    motto: 'What was said and done, kept alive in motion.',
+    members: [
+      { name: 'Tamil', role: 'Domain Lead', img: 'assets/leads/thamizh.webp' },
+      { name: 'Venakt', role: 'Video Lead', img: 'assets/leads/venkat.webp' },
+      { name: 'Yuvasri', role: 'Junior', img: 'assets/jnrs/yuvashree.webp' },
+      { name: 'Nirangan', role: 'Junior', img: 'assets/jnrs/niranjan.webp' }
+    ]
+  },
+  {
+    key: 'mentor',
+    title: 'Mentors',
+    motto: 'The ember that lit every domain before it could carry its own flame.',
+    members: [
+      { name: 'Adharsh', role: 'Mentor', img: 'assets/mentor/adharsh.webp' },
+      { name: 'Devesh', role: 'Mentor', img: 'assets/mentor/devesh.webp' },
+      { name: 'Tarun', role: 'Mentor', img: 'assets/mentor/tarun.webp' }
+    ]
+  }
+];
 
-function resizeMembersCanvas() {
-    const parent = mCanvas.parentElement;
-    if (!parent) return;
-    mW = parent.clientWidth;
-    mH = parent.clientHeight;
-    
-    mCanvas.width = mW * mDpr;
-    mCanvas.height = mH * mDpr;
-    mCanvas.style.width = mW + 'px';
-    mCanvas.style.height = mH + 'px';
-    
-    mCtx.setTransform(mDpr, 0, 0, mDpr, 0, 0);
-    buildMembersEmbers();
+const tabsEl = document.getElementById('tabs');
+const stageEl = document.getElementById('stage');
+const sparkTrail = document.getElementById('sparkTrail');
+
+let currentDomain = 0;
+let isPageAnimating = false;
+
+function getRomanNumeral(n){
+  const map = [['VII',7],['VI',6],['V',5],['IV',4],['III',3],['II',2],['I',1]];
+  for (const [r,v] of map) if (n === v) return r;
+  return String(n);
 }
 
-function buildMembersEmbers() {
-    const n = 120;
-    mFlakes = [];
-    const colors = ['#ff5100', '#ffaa00', '#ff3300', '#e65c00', '#ff9900'];
-    for (let i = 0; i < n; i++) {
-        mFlakes.push({
-            x: Math.random() * mW,
-            y: Math.random() * mH,
-            r: 1 + Math.random() * 2.5,
-            vy: -(0.5 + Math.random() * 1.5),
-            vx: (Math.random() * 0.8 - 0.4),
-            phase: Math.random() * Math.PI * 2,
-            sway: 0.15 + Math.random() * 0.5,
-            alpha: 0.15 + Math.random() * 0.5,
-            color: colors[Math.floor(Math.random() * colors.length)]
-        });
-    }
+function renderCodexTabs(){
+  if (!tabsEl) return;
+  tabsEl.innerHTML = '';
+  DOMAINS.forEach((d, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tab' + (i === currentDomain ? ' active' : '');
+    btn.innerHTML = `<span class="flame">${i === currentDomain ? '\u2726' : ''}</span>${d.title}`;
+    btn.addEventListener('click', () => goToDomain(i));
+    tabsEl.appendChild(btn);
+  });
 }
 
-function drawMembersEmbers() {
-    mCtx.clearRect(0, 0, mW, mH);
-    for (let i = 0; i < mFlakes.length; i++) {
-        const f = mFlakes[i];
-        drawGlowDot(mCtx, f.x, f.y, f.r, f.color, f.alpha);
-    }
-}
+function buildDomainPage(domain, index){
+  const el = document.createElement('div');
+  el.className = 'page entering';
+  
+  let leads, juniors;
+  if (domain.key === 'executives') {
+    leads = domain.members.slice(0, 3);
+    juniors = domain.members.slice(3);
+  } else {
+    leads = domain.members.filter(m => m.role.toLowerCase() !== 'junior');
+    juniors = domain.members.filter(m => m.role.toLowerCase() === 'junior');
+  }
 
-let membersInView = false;
-const membersSectionEl = document.getElementById('members');
-if (membersSectionEl && 'IntersectionObserver' in window) {
-    const membersIO = new IntersectionObserver(
-        entries => { membersInView = entries[0].isIntersecting; },
-        { rootMargin: '600px 0px' }
-    );
-    membersIO.observe(membersSectionEl);
-} else {
-    membersInView = true;
-}
+  const isExec = domain.key === 'executives';
+  const isMentor = domain.key === 'mentor';
 
-function loopMembersEmbers(t) {
-    if (mW === 0 || mH === 0) {
-        requestAnimationFrame(loopMembersEmbers);
-        return;
-    }
-    if (pageIsVisible && membersInView && !introIsPlaying) {
-        for (let i = 0; i < mFlakes.length; i++) {
-            const f = mFlakes[i];
-            f.y += f.vy;
-            f.x += f.vx + Math.sin(t * 0.0012 + f.phase) * f.sway;
-
-            if (f.y + f.r < 0) {
-                f.y = mH + f.r;
-                f.x = Math.random() * mW;
-            }
-            if (f.x < -f.r) f.x = mW + f.r;
-            else if (f.x > mW + f.r) f.x = -f.r;
-        }
-        drawMembersEmbers();
-    }
-    requestAnimationFrame(loopMembersEmbers);
-}
-
-// ── Eye Ticker Logic (vanilla-JS port of the eye-ticker React component) ──
-const EYE_TICKER_IMAGES = {
-    line1: [
-        { src: 'assets/exec/nitin.webp', focusY: 15 },
-        { src: 'assets/exec/aashira.webp', focusY: 15 },
-        { src: 'assets/exec/Varsha.webp', focusY: 15 },
-        { src: 'assets/exec/rishika.webp', focusY: 15 },
-        { src: 'assets/exec/aishwarya.webp', focusY: 15 },
-    ],
-    line2: [
-        { src: 'assets/leads/harish.webp', focusY: 15 },
-        { src: 'assets/leads/jagadish.webp', focusY: 15 },
-        { src: 'assets/leads/mythrayee.webp', focusY: 15 },
-        { src: 'assets/leads/keerthana.webp', focusY: 15 },
-        { src: 'assets/leads/sachitha.webp', focusY: 15 },
-        { src: 'assets/leads/srinithi.webp', focusY: 15 },
-        { src: 'assets/leads/rakesh.webp', focusY: 15 },
-        { src: 'assets/leads/giridharan.webp', focusY: 15 },
-        { src: 'assets/leads/thamizh.webp', focusY: 15 },
-        { src: 'assets/leads/venkat.webp', focusY: 15 },
-        { src: 'assets/leads/abhishek.webp', focusY: 15 },
-        { src: 'assets/leads/pavithra.webp', focusY: 15 },
-        { src: 'assets/leads/sherly.webp', focusY: 15 },
-    ],
-    line3: [
-        { src: 'assets/jnrs/abhirami.webp', focusY: 15 },
-        { src: 'assets/jnrs/neranjan.webp', focusY: 15 },
-        { src: 'assets/jnrs/nithin aaron.webp', focusY: 15 },
-        { src: 'assets/jnrs/rishidhar.webp', focusY: 15 },
-        { src: 'assets/jnrs/anuradha.webp', focusY: 15 },
-        { src: 'assets/jnrs/dhanushri.webp', focusY: 15 },
-        { src: 'assets/jnrs/kamalesh.webp', focusY: 15 },
-        { src: 'assets/jnrs/nirppesh.webp', focusY: 15 },
-        { src: 'assets/jnrs/dhivagar.webp', focusY: 15 },
-        { src: 'assets/jnrs/faaiza.webp', focusY: 15 },
-        { src: 'assets/jnrs/kaushik.webp', focusY: 15 },
-        { src: 'assets/jnrs/niranjan.webp', focusY: 15 },
-        { src: 'assets/jnrs/yuvashree.webp', focusY: 15 },
-        { src: 'assets/jnrs/devika.webp', focusY: 15 },
-        { src: 'assets/jnrs/shreya.webp', focusY: 15 },
-        { src: 'assets/jnrs/vamshika.webp', focusY: 15 },
-        { src: 'assets/jnrs/visagan.webp', focusY: 15 },
-    ],
-    line4: [
-        { src: 'assets/mentor/adharsh.webp', focusY: 15 },
-        { src: 'assets/mentor/devesh.webp', focusY: 15 },
-        { src: 'assets/mentor/tarun.webp', focusY: 15 },
-    ],
-};
-
-const EYE_TICKER_ROW_CONFIG = {
-    line1: { bow: -1,   arc: 63, gap: 32, dir: 'right', bandIndex: 0, static: true },
-    line2: { bow: -0.3, arc: 63, gap: 32, dir: 'left',  bandIndex: 1 },
-    line3: { bow: 0.3,  arc: 63, gap: 32, dir: 'right', bandIndex: 2 },
-    line4: { bow: 1,    arc: 63, gap: 32, dir: 'left',  bandIndex: 3, static: true },
-};
-const EYE_TICKER_ROW_COUNT = 4;
-
-const EYE_TICKER_SPEED = 20;      // base speed unit, matches JSX default
-const EYE_TICKER_PX_PER_SPEED = 14;
-const EYE_TICKER_SPEED_MULTIPLIER = 0.32; // slowed to a calm, comfortable ticker pace
-const EYE_TICKER_HOVER_SLOWDOWN = 0.18; // fraction of (already-reduced) pace while hovered
-
-class EyeTickerRow {
-    constructor(el, side, images) {
-        this.el = el;
-        this.side = side;
-        this.config = EYE_TICKER_ROW_CONFIG[side];
-        this.static = !!this.config.static;
-        this.images = images;
-        this.cardEls = [];
-        this.hoveredIndex = -1;
-        this.travel = 0;
-        this.lastTime = null;
-        this.frame = null;
-        this.build();
-    }
-
-    measure() {
-        const rect = this.el.parentElement.getBoundingClientRect();
-        this.width = rect.width;
-        this.height = rect.height;
-        this.radius = 14;
-
-        // Give each row its own vertical band so rows can never overlap,
-        // then size the card to actually fit inside that band (leaving a
-        // little slack for the arc to bob up/down within it).
-        this.bandHeight = this.height / EYE_TICKER_ROW_COUNT;
-        this.bandCenter = this.bandHeight * (this.config.bandIndex + 0.5);
-
-        const aspect = 190 / 240; // width / height of the reference card
-        const maxCardHeight = this.bandHeight * 0.92;
-        const isMobile = this.width < 640;
-        const preferredCardHeight = isMobile ? 220 : 340;
-        this.cardHeight = Math.max(60, Math.min(preferredCardHeight, maxCardHeight));
-        this.cardWidth = this.cardHeight * aspect;
-
-        this.outside = Math.max(this.cardWidth * 0.75, this.width * 0.06);
-        this.pathWidth = Math.max(1, this.width - this.cardWidth + this.outside * 2);
-        this.step = Math.max(this.cardWidth * 0.25, this.cardWidth + this.config.gap);
-
-        if (this.static) {
-            this.cards = this.images;
-            this.loopLength = Math.max(1, this.cards.length * this.step);
-        } else {
-            const setWidth = Math.max(1, this.images.length * this.step);
-            const copies = Math.max(2, Math.ceil((this.pathWidth + setWidth) / setWidth) + 1);
-            this.cards = Array.from({ length: copies }).flatMap(() => this.images);
-            this.loopLength = Math.max(1, this.cards.length * this.step);
-        }
-
-        this.headroom = Math.max(0, this.bandHeight / 2 - this.cardHeight / 2);
-        this.amplitude = this.headroom * (this.config.arc / 100);
-        this.baseline = this.bandCenter;
-        this.dirSign = this.config.dir === 'left' ? -1 : 1;
-    }
-
-    build() {
-        this.measure();
-        this.el.innerHTML = '';
-        this.cardEls = this.cards.map((img, i) => {
-            const card = document.createElement('div');
-            card.className = 'eye-card';
-            card.style.width = this.cardWidth + 'px';
-            card.style.height = this.cardHeight + 'px';
-            card.style.borderRadius = this.radius + 'px';
-
-            if (img.src) {
-                const imgEl = document.createElement('img');
-                imgEl.className = 'eye-card-img';
-                imgEl.src = img.src;
-                imgEl.alt = '';
-                imgEl.draggable = false;
-                imgEl.style.objectPosition = `center ${img.focusY}%`;
-                card.appendChild(imgEl);
-            } else {
-                card.classList.add('is-empty');
-            }
-
-            card.addEventListener('mouseenter', () => { this.hoveredIndex = i; card.classList.add('is-hovered'); });
-            card.addEventListener('mouseleave', () => { if (this.hoveredIndex === i) this.hoveredIndex = -1; card.classList.remove('is-hovered'); });
-
-            this.el.appendChild(card);
-            return card;
-        });
-
-        if (this.static) {
-            this.el.classList.add('is-static');
-            this.el.style.height = this.cardHeight + 'px';
-            this.el.style.top = (this.bandCenter - this.cardHeight / 2) + 'px';
-            this.cardEls.forEach(card => {
-                card.style.position = 'relative';
-                card.style.flex = '0 0 auto';
-                card.style.zIndex = '1';
-            });
-        }
-    }
-
-    placeAt(index, travel) {
-        const raw = index * this.step + travel;
-        const wrapped = ((raw % this.loopLength) + this.loopLength) % this.loopLength;
-        const progress = Math.max(0, Math.min(1, wrapped / this.pathWidth));
-        const x = wrapped - this.outside;
-        const y = this.baseline + this.config.bow * this.amplitude * Math.sin(Math.PI * progress) - this.cardHeight / 2;
-        const visible = x > -this.cardWidth * 1.25 && x < this.width + this.cardWidth * 0.25;
-        const z = Math.round(this.dirSign * x) + 100000;
-        return { x, y, visible, z };
-    }
-
-    tick(now) {
-        if (this.lastTime === null) this.lastTime = now;
-        const dt = (now - this.lastTime) / 1000;
-        this.lastTime = now;
-
-        // Skip the (otherwise-forever) per-frame work while the section
-        // isn't visible, the tab is backgrounded, or the intro is playing.
-        if (pageIsVisible && membersInView && !introIsPlaying) {
-            const slowed = this.hoveredIndex !== -1;
-            const paceFactor = slowed ? EYE_TICKER_HOVER_SLOWDOWN : 1;
-            const pace = Math.max(1, EYE_TICKER_SPEED) * EYE_TICKER_PX_PER_SPEED * EYE_TICKER_SPEED_MULTIPLIER * paceFactor;
-
-            this.travel += dt * pace * this.dirSign;
-
-            for (let i = 0; i < this.cardEls.length; i++) {
-                const el = this.cardEls[i];
-                const { x, y, visible, z } = this.placeAt(i, this.travel);
-                el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-                el.style.opacity = visible ? '1' : '0';
-                if (i !== this.hoveredIndex) el.style.zIndex = String(z);
-            }
-        } else {
-            this.lastTime = now; // avoid a large dt jump when it resumes
-        }
-
-        this.frame = requestAnimationFrame((t) => this.tick(t));
-    }
-
-    start() {
-        if (this.static) return;
-        if (this.frame) cancelAnimationFrame(this.frame);
-        this.lastTime = null;
-        this.frame = requestAnimationFrame((t) => this.tick(t));
-    }
-
-    resize() {
-        this.measure();
-        this.el.innerHTML = '';
-        this.build();
-    }
-}
-
-const eyeTickerEl = document.getElementById('eye-ticker');
-if (eyeTickerEl) {
-    const rows = [
-        new EyeTickerRow(document.getElementById('eye-row-line1'), 'line1', EYE_TICKER_IMAGES.line1),
-        new EyeTickerRow(document.getElementById('eye-row-line2'), 'line2', EYE_TICKER_IMAGES.line2),
-        new EyeTickerRow(document.getElementById('eye-row-line3'), 'line3', EYE_TICKER_IMAGES.line3),
-        new EyeTickerRow(document.getElementById('eye-row-line4'), 'line4', EYE_TICKER_IMAGES.line4),
-    ];
-    rows.forEach((row) => row.start());
-
-    let resizeTimer = null;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => rows.forEach((row) => row.resize()), 200);
+  el.innerHTML = `
+    <div class="folio">
+      <span>Codex of Domains</span>
+      <span class="num">Chapter ${getRomanNumeral(index+1)} — ${String(index+1).padStart(2,'0')} / ${String(DOMAINS.length).padStart(2,'0')}</span>
+    </div>
+    <div class="chapter-head">
+      <div class="chapter-num">Chapter ${getRomanNumeral(index+1)}</div>
+      <div class="chapter-title">${domain.title}</div>
+      <div class="chapter-motto">${domain.motto}</div>
+    </div>
+    <div class="roster">
+      <div class="roster-tier leads-tier">
+        ${leads.map(m => {
+          let extraClass = 'lead';
+          if (isExec) extraClass = 'executive';
+          else if (isMentor) extraClass = 'mentor';
+          return `
+            <div class="member-card ${extraClass}">
+              <img src="${m.img}" class="member-pic" alt="${m.name}" loading="lazy" />
+              <div class="name">${m.name}</div>
+              <div class="role">${m.role}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+      ${juniors.length > 0 ? `
+      <div class="roster-tier juniors-tier">
+        ${juniors.map(m => {
+          let extraClass = 'junior';
+          if (isExec) extraClass = 'executive';
+          else if (isMentor) extraClass = 'mentor';
+          return `
+            <div class="member-card ${extraClass}">
+              <img src="${m.img}" class="member-pic" alt="${m.name}" loading="lazy" />
+              <div class="name">${m.name}</div>
+              <div class="role">${m.role}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+      ` : ''}
+    </div>
+    <div class="turn-controls">
+      <button class="turn-btn" data-dir="prev" ${index === 0 ? 'disabled' : ''}>&larr; Prev Chapter</button>
+      <span class="page-progress">${String(index+1).padStart(2,'0')} / ${String(DOMAINS.length).padStart(2,'0')}</span>
+      <button class="turn-btn" data-dir="next" ${index === DOMAINS.length-1 ? 'disabled' : ''}>Next Chapter &rarr;</button>
+    </div>
+  `;
+  el.querySelectorAll('.turn-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      const dir = b.dataset.dir;
+      if (dir === 'prev' && currentDomain > 0) goToDomain(currentDomain - 1);
+      if (dir === 'next' && currentDomain < DOMAINS.length - 1) goToDomain(currentDomain + 1);
     });
+  });
+  return el;
 }
+
+function goToDomain(index){
+  if (isPageAnimating || index === currentDomain) return;
+  isPageAnimating = true;
+  const forward = index > currentDomain;
+
+  const oldPage = stageEl.querySelector('.page');
+  const newPage = buildDomainPage(DOMAINS[index], index);
+  newPage.style.transform = forward ? 'rotateY(150deg)' : 'rotateY(-150deg)';
+  newPage.style.opacity = '0';
+  newPage.style.zIndex = '2';
+  stageEl.appendChild(newPage);
+
+  if (sparkTrail) {
+    sparkTrail.classList.remove('active');
+    void sparkTrail.offsetWidth;
+    sparkTrail.classList.add('active');
+  }
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (oldPage) oldPage.classList.add(forward ? 'leaving-fwd' : 'leaving-back');
+      newPage.style.transform = 'rotateY(0deg)';
+      newPage.style.opacity = '1';
+    });
+  });
+
+  setTimeout(() => {
+    if (oldPage) oldPage.remove();
+    isPageAnimating = false;
+  }, 900);
+
+  currentDomain = index;
+  renderCodexTabs();
+}
+
+function initCodex(){
+  if (!tabsEl || !stageEl) return;
+  renderCodexTabs();
+  const first = buildDomainPage(DOMAINS[currentDomain], currentDomain);
+  stageEl.appendChild(first);
+
+  // ambient embers for codex
+  const ambient = document.getElementById('ambient');
+  if (ambient) {
+    for (let i = 0; i < 22; i++){
+      const s = document.createElement('span');
+      const size = 2 + Math.random()*3;
+      s.style.width = size+'px';
+      s.style.height = size+'px';
+      s.style.left = Math.random()*100+'vw';
+      s.style.animationDuration = (9 + Math.random()*10)+'s';
+      s.style.animationDelay = (Math.random()*10)+'s';
+      ambient.appendChild(s);
+    }
+  }
+}
+initCodex();
 
 // ── Cheer Button — burst into flames then commit ──────
 function burstFlames(b) {
