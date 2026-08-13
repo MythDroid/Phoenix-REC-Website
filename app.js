@@ -1,4 +1,9 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
+// Module-level flag: true while the intro overlay is visible.
+// Declared here (outside DOMContentLoaded) so the standalone
+// kinetic-grid IIFE below can also gate itself on this flag.
+let introIsPlaying = false;
+
+document.addEventListener('DOMContentLoaded', () => {
 
 // Detect touch/no-mouse devices once, reused by every mouse-only effect below
 const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
@@ -8,6 +13,9 @@ const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
 // while the tab is in the background.
 let pageIsVisible = !document.hidden;
 document.addEventListener('visibilitychange', () => { pageIsVisible = !document.hidden; });
+
+// introIsPlaying is declared at module scope above DOMContentLoaded
+// so every RAF loop in this file can read it.
 
 // ═══════════════════════════════════════════════════════
 // 0. INTRO VIDEO — play on load, then reveal the site
@@ -19,6 +27,7 @@ if (introOverlay && introVideo) {
     if (hasPlayed) {
         introOverlay.remove();
     } else {
+        introIsPlaying = true;
         document.body.classList.add('intro-locked');
         let introDone = false;
         const hideIntro = () => {
@@ -28,6 +37,8 @@ if (introOverlay && introVideo) {
             document.body.classList.remove('intro-locked');
             introOverlay.classList.add('is-hidden');
             setTimeout(() => { if (introOverlay.parentNode) introOverlay.remove(); }, 900);
+            introIsPlaying = false;
+            startBgAnimation();
         };
         introVideo.addEventListener('ended', hideIntro);
         introVideo.addEventListener('error', hideIntro);
@@ -241,11 +252,6 @@ function drawCables() {
 }
 
 // ── Shared glow-dot sprite cache ────────────────────────
-// canvas.shadowBlur recomputes a soft blur in software on every single
-// shape, every frame — extremely expensive with 100+ particles on screen
-// at once. Pre-rendering the same glow once per color into a small
-// offscreen canvas and drawImage-ing it instead gives the identical
-// visual result for a fraction of the cost.
 const glowSpriteCache = {};
 function getGlowSprite(color) {
     if (glowSpriteCache[color]) return glowSpriteCache[color];
@@ -272,8 +278,6 @@ function drawGlowDot(ctx, x, y, r, color, alpha) {
 }
 
 // ── Ember Particles ────────────────────────────────────
-// Embers spawn throughout the full canvas height so they
-// appear across the ENTIRE viewport, not just the bottom.
 class Ember {
     constructor(randY = false) { this.reset(randY); }
 
@@ -308,8 +312,6 @@ class Ember {
     }
 }
 
-// Initialise embers with randY=true so they start DISTRIBUTED
-// across the full viewport — not bunched at the bottom
 const EMBER_COUNT = 90;
 let embers = [];
 
@@ -318,8 +320,6 @@ function buildEmbers() {
 }
 
 // ── Cursor Fire Embers ─────────────────────────────────
-// Short-lived sparks that rise from the mouse cursor.
-// Spawn rate increases dramatically when hovering interactive elements.
 class CursorEmber {
     constructor(x, y, intense) {
         this.x = x + (Math.random() * 14 - 7);
@@ -335,8 +335,8 @@ class CursorEmber {
     update() {
         this.x  += this.vx;
         this.y  += this.vy;
-        this.vy -= 0.04;          // natural upward drift acceleration
-        this.vx *= 0.97;          // slight horizontal damping
+        this.vy -= 0.04;
+        this.vx *= 0.97;
         this.life++;
     }
     draw() {
@@ -345,16 +345,16 @@ class CursorEmber {
     }
 }
 
-let cursorEmbers = [];   // active cursor sparks
-let frameCtr = 0;        // frame counter for throttling
+let cursorEmbers = [];
+let frameCtr = 0;
 
 // ── Main background render loop ────────────────────────
-(function animBg() {
-    if (!bgW || !pageIsVisible) { requestAnimationFrame(animBg); return; }
+let bgRafId = null;
+function animBg() {
+    if (!bgW || !pageIsVisible) { bgRafId = requestAnimationFrame(animBg); return; }
 
     bgCtx.clearRect(0, 0, bgW, bgH);
 
-    // Dark radial base
     const grad = bgCtx.createRadialGradient(bgW/2, bgH/2, 0, bgW/2, bgH/2, Math.max(bgW,bgH)*0.7);
     grad.addColorStop(0,   '#150a05');
     grad.addColorStop(0.6, '#0c0503');
@@ -362,10 +362,8 @@ let frameCtr = 0;        // frame counter for throttling
     bgCtx.fillStyle = grad;
     bgCtx.fillRect(0, 0, bgW, bgH);
 
-    // Draw the spooky cables first (behind embers)
     drawCables();
 
-    // Draw subtle grid on top of cables
     bgCtx.save();
     bgCtx.strokeStyle = 'rgba(255,81,0,0.015)';
     bgCtx.lineWidth   = 1;
@@ -378,34 +376,35 @@ let frameCtr = 0;        // frame counter for throttling
     }
     bgCtx.restore();
 
-    // Draw ambient embers
     embers.forEach(e => { e.update(); e.draw(); });
 
-    // ── Cursor ember trail ────────────────────────────
     frameCtr++;
     const isHovering = document.body.classList.contains('hovering-interactive');
 
     if (isHovering) {
-        // Intense fire burst when hovering interactive elements
         for (let i = 0; i < 4; i++) cursorEmbers.push(new CursorEmber(mx, my, true));
     } else if (frameCtr % 3 === 0) {
-        // Subtle single ember trailing the cursor at rest
         cursorEmbers.push(new CursorEmber(mx, my, false));
     }
 
-    // Update, draw, and prune dead cursor embers
     cursorEmbers = cursorEmbers.filter(e => {
         e.update();
         e.draw();
         return e.life < e.maxLife;
     });
 
-    requestAnimationFrame(animBg);
-})();
+    bgRafId = requestAnimationFrame(animBg);
+}
 
-// Init after measuring viewport
+function startBgAnimation() {
+    if (bgRafId !== null) cancelAnimationFrame(bgRafId);
+    bgRafId = requestAnimationFrame(animBg);
+}
+
 resizeBg();
 buildEmbers();
+
+if (!introIsPlaying) startBgAnimation();
 
 
 // ═══════════════════════════════════════════════════════
@@ -455,9 +454,6 @@ class LogoSpark {
 
 const logoSparks = Array.from({length: 120}, (_, i) => new LogoSpark(i%2===0?'L':'R'));
 
-// Only run the logo-fire loop while the hero is actually on screen —
-// previously this kept animating 120 particles forever, even scrolled
-// all the way down at the footer.
 let heroInView = true;
 const heroSectionEl = document.getElementById('hero');
 if (heroSectionEl && 'IntersectionObserver' in window) {
@@ -471,7 +467,7 @@ if (heroSectionEl && 'IntersectionObserver' in window) {
 setTimeout(() => {
     resizeLogo();
     (function animLogo() {
-        if (pageIsVisible && heroInView) {
+        if (pageIsVisible && heroInView && !introIsPlaying) {
             logoCtx.clearRect(0, 0, lw, lh);
             logoSparks.forEach(p => { p.update(); p.draw(); });
         }
@@ -482,18 +478,6 @@ setTimeout(() => {
 
 // ═══════════════════════════════════════════════════════
 // 4. GALLERY — BULLETPROOF HORIZONTAL PINNED SCROLL
-//
-//    WHY THIS APPROACH:
-//    CSS position:sticky is killed by overflow-x:hidden on
-//    html/body (a browser bug/spec quirk). Instead we toggle
-//    position:fixed ↔ absolute via JS — 100% reliable.
-//
-//    • gallery-section is 500vh tall (scroll budget)
-//    • gallery-sticky starts position:absolute, top:0
-//    • When scrollY enters the budget zone → position:fixed
-//    • When scrollY exits budget → position:absolute, top:budget
-//    • translateX is driven by (scrollY - sectionTop) / budget
-//    • LERP loop gives the cinematic easing + velocity skew
 // ═══════════════════════════════════════════════════════
 const galSection = document.getElementById('gallery');
 const galSticky  = document.getElementById('gallery-sticky');
@@ -503,10 +487,6 @@ const galCurrent = document.getElementById('gallery-current');
 const galDots    = document.querySelectorAll('.gdot');
 const hcards     = document.querySelectorAll('.hcard');
 
-// Only run the helix's per-frame 3D transform math while the gallery is
-// near the viewport — this was previously recalculating rotateY/translateY
-// on every single frame of the entire page lifetime, visible or not,
-// which is the main cause of scroll stutter.
 let galInView = false;
 if (galSection && 'IntersectionObserver' in window) {
     const galIO = new IntersectionObserver(
@@ -519,27 +499,27 @@ if (galSection && 'IntersectionObserver' in window) {
 }
 
 const LERP   = 0.08;
-let targetX  = 0;  // Target progress (0 to 1000)
-let currentX = 0;  // Eased progress (0 to 1000)
+let targetX  = 0;
+let currentX = 0;
 let lastX    = 0;
 
-// ── Helix Layout Parameters (Responsive) ──────────────
 let galTop    = 0;
 let galBudget = 0;
 let helixRadius  = 420;
 let helixSpacing = 240;
 
 function cacheGalleryBounds() {
-    // Walk up the offsetParent chain for a reliable absolute position
     let el = galSection;
     let top = 0;
     while (el) { top += el.offsetTop; el = el.offsetParent; }
     galTop    = top;
     galBudget = galSection.offsetHeight - window.innerHeight;
 
-    // Responsive 3D calculations
     const w = window.innerWidth;
-    if (w < 480) {
+    if (w < 360) {
+        helixRadius  = 180;
+        helixSpacing = 130;
+    } else if (w < 480) {
         helixRadius  = 230;
         helixSpacing = 160;
     } else if (w < 768) {
@@ -553,8 +533,6 @@ function cacheGalleryBounds() {
         helixSpacing = 260;
     }
 
-    // Set static 3D placement for cards in helix
-    // Card 0: 0deg, Card 1: 90deg, Card 2: 180deg, Card 3: 270deg
     hcards.forEach((card, i) => {
         const theta = i * 90;
         const y = (i - 1.5) * helixSpacing;
@@ -562,27 +540,23 @@ function cacheGalleryBounds() {
     });
 }
 
-// ── Main scroll handler ────────────────────────────────
 function onScroll() {
     const scrollY  = window.scrollY;
     const scrolled = scrollY - galTop;
 
     if (scrolled <= 0) {
-        // ABOVE the gallery
         galSticky.style.position = 'absolute';
         galSticky.style.top      = '0px';
         galSticky.style.bottom   = 'auto';
         targetX = 0;
 
     } else if (scrolled >= galBudget) {
-        // BELOW the gallery
         galSticky.style.position = 'absolute';
         galSticky.style.top      = galBudget + 'px';
         galSticky.style.bottom   = 'auto';
         targetX = 1000;
 
     } else {
-        // INSIDE the pinned zone
         galSticky.style.position = 'fixed';
         galSticky.style.top      = '0px';
         galSticky.style.bottom   = 'auto';
@@ -592,14 +566,14 @@ function onScroll() {
     }
 }
 
-// ── Per-card mouse parallax on the image ──────────────
 hcards.forEach(card => {
+    // Mouse parallax only makes sense with a real pointer — skip on touch
+    if (isTouchDevice) return;
     const wrap = card.querySelector('.hcard-img-wrap');
     card.addEventListener('mousemove', e => {
         const r  = card.getBoundingClientRect();
         const px = (e.clientX - r.left)  / r.width  - 0.5;
         const py = (e.clientY - r.top)   / r.height - 0.5;
-        // Shift image opposite to mouse within card for 3D depth layer feel
         if (wrap) wrap.style.transform = `translate(${px * -25}px, ${py * -16}px) scale(1.05)`;
     });
     card.addEventListener('mouseleave', () => {
@@ -607,7 +581,6 @@ hcards.forEach(card => {
     });
 });
 
-// ── Auto-cycling slideshows on IGNIX chronicle cards ──
 document.querySelectorAll('.hcard-slideshow').forEach(slide => {
     const imgs = slide.querySelectorAll('.hcard-img');
     if (imgs.length < 2) return;
@@ -619,7 +592,6 @@ document.querySelectorAll('.hcard-slideshow').forEach(slide => {
     }, 2600);
 });
 
-// ── Dot click → jump to card position ─────────────────
 galDots.forEach(dot => {
     dot.addEventListener('click', () => {
         const idx      = parseInt(dot.dataset.dot);
@@ -628,7 +600,6 @@ galDots.forEach(dot => {
     });
 });
 
-// ── Scroll + resize listeners ──────────────────────────
 window.addEventListener('scroll', onScroll, { passive: true });
 
 window.addEventListener('resize', () => {
@@ -636,7 +607,6 @@ window.addEventListener('resize', () => {
     onScroll();
 });
 
-// ── Initial setup ──────────────────────────────────────
 window.addEventListener('load', () => {
     cacheGalleryBounds();
     onScroll();
@@ -647,9 +617,6 @@ requestAnimationFrame(() => {
 });
 
 if (typeof ResizeObserver !== 'undefined') {
-    // Debounced — document.body can resize more often than expected
-    // (image loads, font swaps, etc.), and each firing re-walks the DOM
-    // and re-sets transforms on every card.
     let bodyResizeTimer = null;
     const ro = new ResizeObserver(() => {
         clearTimeout(bodyResizeTimer);
@@ -661,10 +628,8 @@ if (typeof ResizeObserver !== 'undefined') {
     ro.observe(document.body);
 }
 
-// ── RAF loop: Helical 3D Easing + Velocity Tilt ────────
 (function galLoop() {
-    if (galInView && pageIsVisible) {
-        // Lerp progress
+    if (galInView && pageIsVisible && !introIsPlaying) {
         currentX += (targetX - currentX) * LERP;
 
         const velocity = currentX - lastX;
@@ -672,22 +637,12 @@ if (typeof ResizeObserver !== 'undefined') {
 
         const progress = currentX / 1000;
 
-        // 1. Rotation: helix rotates by -270 degrees total
         const rotation = progress * -270;
-
-        // 2. Vertical position: translates helix up so current card is centered
-        // At progress=0, centers Card 0 (y = -1.5 * spacing) -> helix translateY = 1.5 * spacing
-        // At progress=1, centers Card 3 (y = 1.5 * spacing) -> helix translateY = -1.5 * spacing
         const helixY = (1.5 - progress * 3) * helixSpacing;
-
-        // 3. Velocity-based X-axis Tilt (Active Theory signature)
-        // The entire helix leans forward/backward when scrolling fast
         const tiltX = Math.max(-10, Math.min(10, velocity * 0.25));
 
-        // Apply composite 3D transform to parent helix
         galHelix.style.transform = `rotateX(${tiltX}deg) rotateY(${rotation}deg) translateY(${helixY}px)`;
 
-        // Smooth UI updates for indicators
         if (galBar) {
             galBar.style.width = (progress * 100) + '%';
         }
@@ -726,8 +681,6 @@ window.addEventListener('scroll', () => {
 // ═══════════════════════════════════════════════════════
 // 6. MEMBERS SECTION — HOVER IMAGE REVEAL & EMBERS BACKGROUND
 // ═══════════════════════════════════════════════════════
-
-// ── Fire Embers Background ─────────────────────────────
 const mCanvas = document.getElementById('members-embers-canvas');
 const mCtx = mCanvas.getContext('2d');
 let mW = 0, mH = 0;
@@ -758,7 +711,7 @@ function buildMembersEmbers() {
             x: Math.random() * mW,
             y: Math.random() * mH,
             r: 1 + Math.random() * 2.5,
-            vy: -(0.5 + Math.random() * 1.5), // upwards drift
+            vy: -(0.5 + Math.random() * 1.5),
             vx: (Math.random() * 0.8 - 0.4),
             phase: Math.random() * Math.PI * 2,
             sway: 0.15 + Math.random() * 0.5,
@@ -776,8 +729,6 @@ function drawMembersEmbers() {
     }
 }
 
-// Only run the members-embers loop while the CORE X BOARD section is
-// near the viewport — previously ran 120 particles forever on every page.
 let membersInView = false;
 const membersSectionEl = document.getElementById('members');
 if (membersSectionEl && 'IntersectionObserver' in window) {
@@ -795,7 +746,7 @@ function loopMembersEmbers(t) {
         requestAnimationFrame(loopMembersEmbers);
         return;
     }
-    if (pageIsVisible && membersInView) {
+    if (pageIsVisible && membersInView && !introIsPlaying) {
         for (let i = 0; i < mFlakes.length; i++) {
             const f = mFlakes[i];
             f.y += f.vy;
@@ -988,9 +939,8 @@ class EyeTickerRow {
         this.lastTime = now;
 
         // Skip the (otherwise-forever) per-frame work while the section
-        // isn't visible or the tab is backgrounded — still keep the RAF
-        // loop alive so it resumes smoothly once back in view.
-        if (pageIsVisible && membersInView) {
+        // isn't visible, the tab is backgrounded, or the intro is playing.
+        if (pageIsVisible && membersInView && !introIsPlaying) {
             const slowed = this.hoveredIndex !== -1;
             const paceFactor = slowed ? EYE_TICKER_HOVER_SLOWDOWN : 1;
             const pace = Math.max(1, EYE_TICKER_SPEED) * EYE_TICKER_PX_PER_SPEED * EYE_TICKER_SPEED_MULTIPLIER * paceFactor;
@@ -1177,6 +1127,8 @@ requestAnimationFrame(loopMembersEmbers);
     buildGrid();
 
     (function loopKG(ts) {
+        // Skip all GPU work while the intro video is playing.
+        if (!introIsPlaying) {
         kCtx.clearRect(0, 0, kW, kH);
         const now = ts || performance.now();
 
@@ -1271,6 +1223,7 @@ requestAnimationFrame(loopMembersEmbers);
         }
 
         kCtx.globalAlpha = 1;
+        } // end !introIsPlaying
         requestAnimationFrame(loopKG);
     })();
 

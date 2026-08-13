@@ -371,6 +371,20 @@ body.is-scrolled .nav-logo {
     z-index: 9999;
 }
 
+/* ── TOUCH: eliminate 300 ms tap delay on all interactive elements ── */
+.register-btn,
+.cheer-btn,
+.connect-card,
+.mobile-nav-link,
+.scroll-btn,
+.gdot,
+.nav-hamburger,
+.mobile-nav-close,
+.hcard,
+.intro-skip {
+    touch-action: manipulation;
+}
+
 /* ═══════════════════════════════════════════════════════
    SECTION 3: GALLERY — PINNED HORIZONTAL SCROLL
    Active Theory style
@@ -904,20 +918,49 @@ body.is-scrolled .nav-logo {
     text-shadow: 0 0 12px rgba(255, 81, 0, 0.5);
 }
 
-/* ── RESPONSIVE ──────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════
+   RESPONSIVE
+   Breakpoints: 900px · 768px · 480px · 360px
+   ════════════════════════════════════════════════════════ */
+
+/* ── Connect cards: 2-col intermediate ─────────────────── */
+@media (max-width: 900px) {
+    .connect-cards {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 640px;
+    }
+    /* Last card (3rd) spans both columns and centres itself */
+    .connect-card:last-child {
+        grid-column: 1 / -1;
+        max-width: 300px;
+        margin: 0 auto;
+        width: 100%;
+    }
+}
+
+/* ── Tablet ≤768px ─────────────────────────────────────── */
 @media (max-width: 768px) {
     /* — Nav — */
     .main-header { padding: 12px 20px; }
     .nav-links    { display: none; }
     .nav-hamburger { display: flex; }
     .mobile-nav-overlay { display: flex; }
+    /*
+     * Fix nav-logo centering animation.
+     * Formula: translate(50vw - nav_pad_left - logo_half_w, 50vh - nav_pad_top - logo_half_h)
+     * At ≤768px: nav_pad=20px, logo_img=100px → half=50px → X offset = 70px
+     *            nav_pad_top=12px, logo_h≈40px → half=20px → Y offset = 32px
+     */
+    .nav-logo {
+        transform: translate(calc(50vw - 70px), calc(50vh - 32px)) scale(1.3);
+    }
 
     /* — Section shared — */
     .section-container { padding: 0 20px; }
     .section-title { font-size: 1.3rem; }
 
     /* — Hero — */
-    .hero-content { padding: 0 16px; }
+    .hero-content { padding: 0 16px; max-width: 520px; }
 
     /* — Events — */
     .event-section { padding: 80px 0; min-height: unset; }
@@ -925,20 +968,30 @@ body.is-scrolled .nav-logo {
     .event-poster-side {
         border-right: none;
         border-bottom: 1px solid var(--border-color);
-        min-height: 220px;
+        /* Taller poster on mobile so the image is legible */
+        min-height: 260px;
         flex: unset;
-        height: 220px;
+        height: 260px;
     }
     .event-details-side { flex: unset; padding: 24px 20px; }
     .event-name { font-size: 1.4rem; }
     .event-info-grid { grid-template-columns: 1fr; gap: 14px; }
     .register-btn,
-    .cheer-btn    { padding: 13px 22px; font-size: .8rem; }
+    .cheer-btn { padding: 13px 22px; font-size: .8rem; }
 
     /* — Gallery — */
+    /* Reduce scroll budget: 500vh is brutal on a phone */
+    .gallery-section { height: 400vh; }
     .gallery-header-bar { padding: 16px 20px 10px; }
     .gallery-header-bar .section-title { font-size: 1.1rem; }
     .gallery-most-recent { font-size: .6rem; letter-spacing: 2px; }
+    /* Fix the 80px horizontal padding that was desktop-only */
+    .gallery-controls { padding: 14px 20px 20px; }
+    /* Slight perspective reduce for smaller screen depth */
+    .gallery-3d-scene {
+        perspective: 900px;
+        perspective-origin: 50% 40%;
+    }
 
     /* — Members — */
     .members-section { padding: 80px 0 100px; }
@@ -946,17 +999,28 @@ body.is-scrolled .nav-logo {
 
     /* — Connect — */
     .connect-section { padding: 80px 0; }
-    .connect-cards { grid-template-columns: 1fr; gap: 20px; max-width: 380px; }
-    .connect-card  { padding: 40px 22px; }
+    /* Override the 2-col intermediate to go full 1-col at 768px */
+    .connect-cards { grid-template-columns: 1fr; gap: 20px; max-width: 400px; }
+    .connect-card:last-child { grid-column: auto; max-width: none; margin: 0; }
+    .connect-card { padding: 40px 22px; }
 
     /* — Footer — */
     .footer-branding { font-size: 1.1rem; }
+    .footer-container { text-align: center; }
 }
 
+/* ── Mobile ≤480px ─────────────────────────────────────── */
 @media (max-width: 480px) {
     /* — Nav — */
     .main-header { padding: 10px 16px; }
     .nav-logo-img { width: 72px; }
+    /*
+     * At ≤480px: nav_pad=16px, logo_img=72px → half=36px → X = 52px
+     *            nav_pad_top=10px, logo_h≈29px → half=14px → Y = 24px
+     */
+    .nav-logo {
+        transform: translate(calc(50vw - 52px), calc(50vh - 24px)) scale(1.2);
+    }
 
     /* — Section shared — */
     .section-container { padding: 0 14px; }
@@ -965,23 +1029,35 @@ body.is-scrolled .nav-logo {
 
     /* — Hero — */
     .hero-section { padding-top: 70px; }
+    .hero-content { max-width: 100%; }
 
     /* — Events — */
     .event-section { padding: 60px 0; }
-    .event-poster-side { height: 180px; min-height: 180px; }
+    .event-poster-side { height: 200px; min-height: 200px; }
     .event-details-side { padding: 18px 16px; }
     .event-name { font-size: 1.2rem; }
     .event-desc { font-size: .84rem; margin-bottom: 22px; }
     .event-info-grid { gap: 10px; margin-bottom: 20px; }
     .info-val { font-size: .82rem; }
+    /* Buttons full-width on narrow phones */
     .register-btn,
-    .cheer-btn { width: 100%; text-align: center; }
+    .cheer-btn {
+        width: 100%;
+        text-align: center;
+        font-size: .76rem;
+        padding: 12px 16px;
+        box-sizing: border-box;
+    }
 
     /* — Gallery — */
-    .gallery-section { height: 350vh; }
+    .gallery-section { height: 300vh; }
     .gallery-header-bar { padding: 12px 14px 8px; }
     .gallery-most-recent { display: none; }
     .gallery-controls { padding: 8px 14px 14px; }
+    .gallery-3d-scene {
+        perspective: 700px;
+        perspective-origin: 50% 45%;
+    }
 
     /* — Members — */
     .members-section { padding: 60px 0 80px; }
@@ -1002,6 +1078,57 @@ body.is-scrolled .nav-logo {
     .footer-tagline  { font-size: .7rem; }
     .footer-copy     { font-size: .64rem; }
 
-    /* — Mobile nav drawer link size — */
+    /* — Mobile nav drawer — */
     .mobile-nav-link { font-size: .95rem; }
+}
+
+/* ── Small Mobile ≤360px (Galaxy S series, older iPhones) ── */
+@media (max-width: 360px) {
+    /* — Nav — */
+    .main-header { padding: 8px 14px; }
+    .nav-logo-img { width: 60px; }
+    .nav-logo {
+        transform: translate(calc(50vw - 44px), calc(50vh - 20px)) scale(1.1);
+    }
+
+    /* — Section shared — */
+    .section-container { padding: 0 12px; }
+    .section-title { font-size: 1rem; }
+
+    /* — Events — */
+    .event-poster-side { height: 170px; min-height: 170px; }
+    .event-name { font-size: 1.05rem; }
+    .event-desc { font-size: .8rem; }
+    .status-tag { font-size: .72rem; }
+    .info-label { font-size: .62rem; }
+    .info-val { font-size: .78rem; }
+    /* Prevent Orbitron button text from overflowing */
+    .register-btn,
+    .cheer-btn {
+        font-size: .7rem;
+        letter-spacing: 1px;
+        padding: 11px 12px;
+    }
+
+    /* — Gallery — */
+    .gallery-section { height: 260vh; }
+    .gallery-heading .section-title { font-size: .9rem; }
+    .gallery-counter { font-size: .9rem; }
+
+    /* — Members — */
+    .eye-ticker { height: 560px; }
+    .section-header { margin-bottom: 24px; }
+
+    /* — Connect — */
+    .connect-card { padding: 26px 14px; }
+    .connect-label { letter-spacing: 2px; }
+    .connect-handle { font-size: .6rem; word-break: break-all; }
+
+    /* — Footer — */
+    .footer-branding { font-size: .9rem; }
+    .footer-tagline  { font-size: .65rem; letter-spacing: 1px; }
+
+    /* — Mobile nav drawer — */
+    .mobile-nav-link { font-size: .85rem; letter-spacing: 2px; }
+    .mobile-nav-links { gap: 24px; }
 }
