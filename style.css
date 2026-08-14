@@ -968,10 +968,12 @@ body.is-scrolled .nav-logo {
     .event-poster-side {
         border-right: none;
         border-bottom: 1px solid var(--border-color);
-        /* Taller poster on mobile so the image is legible */
-        min-height: 260px;
+        min-height: unset;
         flex: unset;
-        height: 260px;
+        height: auto;
+    }
+    .event-poster-img {
+        height: auto;
     }
     .event-details-side { flex: unset; padding: 24px 20px; }
     .event-name { font-size: 1.4rem; }
@@ -1033,7 +1035,7 @@ body.is-scrolled .nav-logo {
 
     /* — Events — */
     .event-section { padding: 60px 0; }
-    .event-poster-side { height: 200px; min-height: 200px; }
+    .event-poster-side { height: auto; min-height: unset; }
     .event-details-side { padding: 18px 16px; }
     .event-name { font-size: 1.2rem; }
     .event-desc { font-size: .84rem; margin-bottom: 22px; }
@@ -1096,7 +1098,7 @@ body.is-scrolled .nav-logo {
     .section-title { font-size: 1rem; }
 
     /* — Events — */
-    .event-poster-side { height: 170px; min-height: 170px; }
+    .event-poster-side { height: auto; min-height: unset; }
     .event-name { font-size: 1.05rem; }
     .event-desc { font-size: .8rem; }
     .status-tag { font-size: .72rem; }
@@ -1340,7 +1342,7 @@ body.is-scrolled .nav-logo {
 }
 
 #members .member-card .member-pic {
-  width: 140px;
+  width: 136px;
   height: 170px;
   border-radius: 14px;
   object-fit: cover;
@@ -1359,7 +1361,7 @@ body.is-scrolled .nav-logo {
 #members .member-card.lead .member-pic,
 #members .member-card.executive .member-pic,
 #members .member-card.mentor .member-pic {
-  width: 190px;
+  width: 176px;
   height: 220px;
   border-radius: 16px;
 }
@@ -1416,24 +1418,40 @@ body.is-scrolled .nav-logo {
 }
 
 @media (max-width: 720px) {
-  #members .book { grid-template-columns: 40px 1fr; }
+  #members .book { grid-template-columns: 40px 1fr; min-height: 600px; }
+  #members .stage { min-height: 600px; }
   #members .tab { font-size: 9px; padding: 10px 5px; }
   #members .page { padding: 28px 20px 24px; }
-  #members .member-card { width: 140px; }
-  #members .member-card .member-pic { width: 120px; height: 150px; border-radius: 12px; }
+  #members .member-card { width: 130px; }
+  #members .member-card .member-pic { width: 112px; height: 140px; border-radius: 12px; }
   #members .member-card.lead,
   #members .member-card.executive,
   #members .member-card.mentor {
-    width: 190px;
+    width: 140px;
   }
   #members .member-card.lead .member-pic,
   #members .member-card.executive .member-pic,
   #members .member-card.mentor .member-pic {
-    width: 165px;
-    height: 195px;
+    width: 120px;
+    height: 150px;
     border-radius: 14px;
   }
-  #members .roster-tier { gap: 16px; }
+  #members .roster-tier {
+    gap: 16px;
+    flex-wrap: nowrap !important;
+    justify-content: safe center !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    width: 100% !important;
+    padding-bottom: 8px !important;
+  }
+  #members .roster-tier::-webkit-scrollbar {
+    height: 4px !important;
+  }
+  #members .roster-tier::-webkit-scrollbar-thumb {
+    background: rgba(255,170,0,.25) !important;
+    border-radius: 4px !important;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   #members .page, #members .ambient span { transition: none !important; animation: none !important; }
