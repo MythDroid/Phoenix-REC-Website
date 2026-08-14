@@ -1417,7 +1417,7 @@ body.is-scrolled .nav-logo {
   100% { opacity: 0; }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 768px) {
   #members .book { grid-template-columns: 40px 1fr; min-height: 600px; }
   #members .stage { min-height: 600px; }
   #members .tab { font-size: 9px; padding: 10px 5px; }
