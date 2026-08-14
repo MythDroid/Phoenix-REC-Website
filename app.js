@@ -803,6 +803,9 @@ function buildDomainPage(domain, index){
   if (domain.key === 'executives') {
     leads = domain.members.slice(0, 3);
     juniors = domain.members.slice(3);
+  } else if (domain.key === 'mentor') {
+    leads = domain.members.slice(0, 2);
+    juniors = domain.members.slice(2);
   } else {
     leads = domain.members.filter(m => m.role.toLowerCase() !== 'junior');
     juniors = domain.members.filter(m => m.role.toLowerCase() === 'junior');
@@ -812,10 +815,6 @@ function buildDomainPage(domain, index){
   const isMentor = domain.key === 'mentor';
 
   el.innerHTML = `
-    <div class="folio">
-      <span>Codex of Domains</span>
-      <span class="num">Chapter ${getRomanNumeral(index+1)} — ${String(index+1).padStart(2,'0')} / ${String(DOMAINS.length).padStart(2,'0')}</span>
-    </div>
     <div class="chapter-head">
       <div class="chapter-num">Chapter ${getRomanNumeral(index+1)}</div>
       <div class="chapter-title">${domain.title}</div>

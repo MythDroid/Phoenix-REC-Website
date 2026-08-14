@@ -1138,19 +1138,19 @@ body.is-scrolled .nav-logo {
    ========================================================================== */
 #members {
   --void: #050303;
-  --page: #160b06;
-  --page-2: #1d0f08;
+  --page: transparent;
+  --page-2: transparent;
   --ink: #f2e6d6;
   --ash: #9c8a78;
   --ember: #ff5100;
   --gold: #ffaa00;
   --crimson: #ff003c;
-  --serif: 'Cormorant Garamond', serif;
-  --sans: 'Space Grotesk', sans-serif;
-  --mono: 'Courier Prime', monospace;
+  --serif: var(--font-orbitron);
+  --sans: var(--font-space);
+  --mono: var(--font-pixel);
   position: relative;
   overflow: hidden;
-  padding: 80px 20px;
+  padding: 40px 20px;
 }
 
 #members .ambient {
@@ -1172,31 +1172,31 @@ body.is-scrolled .nav-logo {
 
 #members .codex-wrap {
   position: relative; z-index: 1;
-  width: 100%; max-width: 980px;
+  width: 100%; max-width: 860px;
   margin: 0 auto;
   perspective: 2400px;
 }
 
 #members .codex-title {
-  text-align: center; margin-bottom: 34px;
+  text-align: center; margin-bottom: 20px;
 }
 #members .codex-eyebrow {
   font-family: var(--mono); font-size: 11px; letter-spacing: .35em;
   color: var(--ember); text-transform: uppercase; opacity: .85;
 }
 #members .codex-title h2 {
-  font-family: var(--serif); font-weight: 600; font-style: italic;
+  font-family: var(--serif); font-weight: 700;
   font-size: clamp(30px, 5vw, 46px); margin: 6px 0 0;
   color: var(--ink);
   text-shadow: 0 0 24px rgba(255,81,0,.25);
-  letter-spacing: normal;
+  letter-spacing: 2px;
 }
 
 #members .book {
   display: grid;
   grid-template-columns: 64px 1fr;
   gap: 0;
-  min-height: 560px;
+  min-height: 400px;
 }
 
 #members .tabs {
@@ -1208,7 +1208,7 @@ body.is-scrolled .nav-logo {
   writing-mode: vertical-rl;
   text-orientation: mixed;
   transform: rotate(180deg);
-  background: linear-gradient(180deg, var(--page-2), var(--page));
+  background: transparent;
   border: 1px solid rgba(255,170,0,.14);
   border-right: none;
   color: var(--ash);
@@ -1223,7 +1223,7 @@ body.is-scrolled .nav-logo {
 }
 #members .tab:hover { color: var(--gold); padding-right: 11px; }
 #members .tab.active {
-  background: linear-gradient(180deg, #2a1509, #170c07);
+  background: transparent;
   color: var(--gold);
   padding-right: 14px;
   border-color: rgba(255,170,0,.4);
@@ -1233,20 +1233,18 @@ body.is-scrolled .nav-logo {
 
 #members .stage {
   position: relative;
-  min-height: 560px;
+  min-height: 400px;
 }
 
 #members .page {
   position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse at 15% 10%, rgba(255,81,0,.05), transparent 55%),
-    linear-gradient(160deg, var(--page) 0%, var(--page-2) 100%);
+  background: radial-gradient(ellipse at 15% 10%, rgba(255,81,0,.05), transparent 55%);
   border: 1px solid rgba(255,170,0,.16);
   border-radius: 2px 10px 10px 2px;
   box-shadow:
     0 30px 70px rgba(0,0,0,.6),
     inset 0 0 60px rgba(0,0,0,.4);
-  padding: 40px 44px 34px;
+  padding: 24px 30px 20px;
   transform-origin: left center;
   transform-style: preserve-3d;
   backface-visibility: hidden;
@@ -1284,16 +1282,16 @@ body.is-scrolled .nav-logo {
 
 #members .chapter-head { margin-bottom: 22px; }
 #members .chapter-num {
-  font-family: var(--serif); font-style: italic; font-size: 15px;
+  font-family: var(--serif); font-size: 15px;
   color: var(--ember); letter-spacing: .08em;
 }
 #members .chapter-title {
-  font-family: var(--serif); font-weight: 600; font-size: clamp(32px,4vw,44px);
+  font-family: var(--serif); font-weight: 700; font-size: clamp(32px,4vw,44px);
   margin: 2px 0 8px; color: var(--ink);
-  letter-spacing: normal;
+  letter-spacing: 1px;
 }
 #members .chapter-motto {
-  font-family: var(--serif); font-style: italic; font-size: 17px;
+  font-family: var(--sans); font-style: italic; font-size: 15px;
   color: var(--ash); max-width: 520px; line-height: 1.5;
 }
 
@@ -1316,12 +1314,29 @@ body.is-scrolled .nav-logo {
   justify-content: center;
 }
 
+#members .roster-tier.juniors-tier {
+  flex-wrap: nowrap !important;
+  justify-content: safe center !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  width: 100% !important;
+  padding-bottom: 8px !important;
+}
+#members .roster-tier.juniors-tier::-webkit-scrollbar {
+  height: 4px !important;
+}
+#members .roster-tier.juniors-tier::-webkit-scrollbar-thumb {
+  background: rgba(255,170,0,.25) !important;
+  border-radius: 4px !important;
+}
+
 #members .member-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   width: 170px;
+  flex-shrink: 0;
 }
 
 #members .member-card .member-pic {
@@ -1373,7 +1388,7 @@ body.is-scrolled .nav-logo {
 
 #members .turn-controls {
   display: flex; justify-content: space-between; align-items: center;
-  margin-top: 24px; padding-top: 16px;
+  margin-top: 16px; padding-top: 12px;
   border-top: 1px solid rgba(255,170,0,.15);
 }
 #members .turn-btn {
