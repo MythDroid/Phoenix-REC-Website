@@ -50,7 +50,7 @@ body { min-height: 100vh; overflow-x: hidden; }
 .intro-overlay video {
     width: 100vw;
     height: 100vh;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
 }
 .intro-skip {
