@@ -744,7 +744,8 @@ const DOMAINS = [
       { name: 'Rakesh', role: 'Domain Lead', img: 'assets/leads/rakesh.webp' },
       { name: 'Giridharan', role: 'Design Lead', img: 'assets/leads/giridharan.webp' },
       { name: 'Faiza', role: 'Junior', img: 'assets/jnrs/faaiza.webp' },
-      { name: 'Kaushik', role: 'Junior', img: 'assets/jnrs/kaushik.webp' }
+      { name: 'Kaushik', role: 'Junior', img: 'assets/jnrs/kaushik.webp' },
+      { name: 'Dhivagar', role: 'Junior', img: 'assets/jnrs/dhivagar.webp' }
     ]
   },
   {
