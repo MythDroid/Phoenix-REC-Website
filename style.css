@@ -83,6 +83,23 @@ a { text-decoration: none; color: inherit; }
     pointer-events: none;
 }
 
+/* ── STATIC BACKGROUND IMAGE ─────────────────────────── */
+.static-bg-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('assets/background.webp'); /* Replace with your actual image filename */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.4; /* Adjust for transparency */
+    filter: blur(8px); /* Adjust for blurriness */
+    z-index: -5; /* Above bg-canvas (-10), behind content */
+    pointer-events: none;
+}
+
 #kinetic-grid-canvas {
     position: fixed;
     top: 0; left: 0;
