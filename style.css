@@ -1021,7 +1021,12 @@ body.is-scrolled .nav-logo {
     /* Override the 2-col intermediate to go full 1-col at 768px */
     .connect-cards { grid-template-columns: 1fr; gap: 20px; max-width: 400px; }
     .connect-card:last-child { grid-column: auto; max-width: none; margin: 0; }
-    .connect-card { padding: 40px 22px; }
+    .connect-card { 
+        padding: 40px 22px; 
+        opacity: 1 !important; 
+        transform: none !important; 
+        animation: none !important; 
+    }
 
     /* — Footer — */
     .footer-branding { font-size: 1.1rem; }
