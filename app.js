@@ -732,7 +732,6 @@ const DOMAINS = [
       { name: 'Pavithra', role: 'PR Lead', img: 'assets/leads/pavithra.webp' },
       { name: 'Vamshika', role: 'Junior', img: 'assets/jnrs/vamshika.webp' },
       { name: 'Sherya', role: 'Junior', img: 'assets/jnrs/shreya.webp' },
-      { name: 'Visagan', role: 'Junior', img: 'assets/jnrs/visagan.webp' },
       { name: 'Devika', role: 'Junior', img: 'assets/jnrs/devika.webp' }
     ]
   },
