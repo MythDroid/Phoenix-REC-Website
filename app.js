@@ -690,8 +690,8 @@ const DOMAINS = [
       { name: 'Nitin', role: 'President', img: 'assets/exec/nitin.webp' },
       { name: 'Aashira', role: 'Vice President', img: 'assets/exec/aashira.webp' },
       { name: 'Varsha', role: 'Secretary', img: 'assets/exec/Varsha.webp' },
-      { name: 'Rishika', role: 'Treasurer', img: 'assets/exec/rishika.webp' },
-      { name: 'Aishwarya', role: 'Executive', img: 'assets/exec/aishwarya.webp' }
+      { name: 'Rishika', role: 'Joint Secretary', img: 'assets/exec/rishika.webp' },
+      { name: 'Aishwarya', role: 'HR', img: 'assets/exec/aishwarya.webp' }
     ]
   },
   {

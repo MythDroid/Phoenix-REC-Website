@@ -36,9 +36,23 @@
     <!-- ── NAVIGATION ─────────────────────────────────── -->
     <header class="main-header">
         <div class="nav-container">
-            <a href="#hero" class="nav-logo" data-hover-trigger>
-                <img src="assets/phoenix_logo.webp" alt="PHOENIX" class="nav-logo-img" loading="eager">
-            </a>
+            <div class="header-logos" style="display: flex; align-items: center; gap: 15px;">
+                <a href="#hero" class="rec-logo-static" data-hover-trigger>
+                    <img src="assets/rec logo.png" alt="REC" loading="eager" style="height: 40px; width: auto; filter: drop-shadow(0 0 8px rgba(255,81,0,.35));">
+                </a>
+                <a href="#hero" class="nav-logo" data-hover-trigger>
+                    <img src="assets/phoenix_logo.webp" alt="PHOENIX" class="nav-logo-img" loading="eager">
+                </a>
+            </div>
+            <style>
+                .rec-logo-static {
+                    opacity: 1;
+                    transition: opacity 1s ease;
+                }
+                body.intro-locked .rec-logo-static {
+                    opacity: 0;
+                }
+            </style>
             <nav class="nav-links" id="nav-links">
                 <a href="#hero"       class="nav-link active" data-hover-trigger><span class="nav-num">01</span> HOME</a>
                 <a href="#next-event" class="nav-link"        data-hover-trigger><span class="nav-num">02</span> LIVE_SPARK</a>
