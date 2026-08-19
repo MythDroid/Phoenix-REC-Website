@@ -699,9 +699,9 @@ const DOMAINS = [
     title: 'Tech Domain',
     motto: 'Where ideas are forged into code, and code into things that ship.',
     members: [
-      { name: 'Harish', role: 'Domain Lead', img: 'assets/leads/harish.webp' },
-      { name: 'Jagadish', role: 'Tech Lead', img: 'assets/leads/jagadish.webp' },
-      { name: 'Mythrayee', role: 'Tech Lead', img: 'assets/leads/mythrayee.webp' },
+      { name: 'Harish', role: 'Lead', img: 'assets/leads/harish.webp' },
+      { name: 'Jagadish', role: 'Lead', img: 'assets/leads/jagadish.webp' },
+      { name: 'Mythrayee', role: 'Lead', img: 'assets/leads/mythrayee.webp' },
       { name: 'Nerengan', role: 'Junior', img: 'assets/jnrs/neranjan.webp' },
       { name: 'Abhirami', role: 'Junior', img: 'assets/jnrs/abhirami.webp' },
       { name: 'Rishidar', role: 'Junior', img: 'assets/jnrs/rishidhar.webp' },
@@ -713,9 +713,9 @@ const DOMAINS = [
     title: 'Event Domain',
     motto: 'The hands that turn a date on a calendar into a room full of people.',
     members: [
-      { name: 'Sachitha', role: 'Domain Lead', img: 'assets/leads/sachitha.webp' },
-      { name: 'Sriniti', role: 'Event Lead', img: 'assets/leads/srinithi.webp' },
-      { name: 'Keerthana', role: 'Event Lead', img: 'assets/leads/keerthana.webp' },
+      { name: 'Sachitha', role: 'Lead', img: 'assets/leads/sachitha.webp' },
+      { name: 'Sriniti', role: 'Lead', img: 'assets/leads/srinithi.webp' },
+      { name: 'Keerthana', role: 'Lead', img: 'assets/leads/keerthana.webp' },
       { name: 'Anuradha', role: 'Junior', img: 'assets/jnrs/anuradha.webp' },
       { name: 'Dhanushri', role: 'Junior', img: 'assets/jnrs/dhanushri.webp' },
       { name: 'Nirpesh', role: 'Junior', img: 'assets/jnrs/nirppesh.webp' },
@@ -727,9 +727,9 @@ const DOMAINS = [
     title: 'PR Domain',
     motto: 'The voice that carries Phoenix beyond its own walls.',
     members: [
-      { name: 'Abhishek', role: 'Domain Lead', img: 'assets/leads/abhishek.webp' },
-      { name: 'Sherly', role: 'PR Lead', img: 'assets/leads/sherly.webp' },
-      { name: 'Pavithra', role: 'PR Lead', img: 'assets/leads/pavithra.webp' },
+      { name: 'Abhishek', role: 'Lead', img: 'assets/leads/abhishek.webp' },
+      { name: 'Sherly', role: 'Lead', img: 'assets/leads/sherly.webp' },
+      { name: 'Pavithra', role: 'Lead', img: 'assets/leads/pavithra.webp' },
       { name: 'Vamshika', role: 'Junior', img: 'assets/jnrs/vamshika.webp' },
       { name: 'Sherya', role: 'Junior', img: 'assets/jnrs/shreya.webp' },
       { name: 'Devika', role: 'Junior', img: 'assets/jnrs/devika.webp' }
@@ -740,9 +740,9 @@ const DOMAINS = [
     title: 'Design Domain',
     motto: 'Every poster, pixel, and palette that gives the club its face.',
     members: [
-      { name: 'Rakesh', role: 'Domain Lead', img: 'assets/leads/rakesh.webp' },
-      { name: 'Giridharan', role: 'Design Lead', img: 'assets/leads/giridharan.webp' },
-      { name: 'Faiza', role: 'Junior', img: 'assets/jnrs/faaiza.webp' },
+      { name: 'Rakesh', role: 'Lead', img: 'assets/leads/rakesh.webp' },
+      { name: 'Giridharan', role: 'Lead', img: 'assets/leads/giridharan.webp' },
+      { name: 'Faaiza', role: 'Junior', img: 'assets/jnrs/faaiza.webp' },
       { name: 'Kaushik', role: 'Junior', img: 'assets/jnrs/kaushik.webp' },
       { name: 'Dhivagar', role: 'Junior', img: 'assets/jnrs/dhivagar.webp' }
     ]
@@ -752,10 +752,10 @@ const DOMAINS = [
     title: 'Video Domain',
     motto: 'What was said and done, kept alive in motion.',
     members: [
-      { name: 'Tamil', role: 'Domain Lead', img: 'assets/leads/thamizh.webp' },
-      { name: 'Venakt', role: 'Video Lead', img: 'assets/leads/venkat.webp' },
-      { name: 'Yuvasri', role: 'Junior', img: 'assets/jnrs/yuvashree.webp' },
-      { name: 'Nirangan', role: 'Junior', img: 'assets/jnrs/niranjan.webp' }
+      { name: 'Tamizh', role: 'Lead', img: 'assets/leads/thamizh.webp' },
+      { name: 'Venkat', role: 'Lead', img: 'assets/leads/venkat.webp' },
+      { name: 'Yuvashree', role: 'Junior', img: 'assets/jnrs/yuvashree.webp' },
+      { name: 'Niranjan', role: 'Junior', img: 'assets/jnrs/niranjan.webp' }
     ]
   },
   {
