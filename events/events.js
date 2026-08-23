@@ -244,3 +244,82 @@
         requestAnimationFrame(loopKG);
     })();
 })();
+
+// ── 3. LIGHTBOX GALLERY ────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    // Add lightbox HTML structure to body
+    const lightbox = document.createElement('div');
+    lightbox.id = 'ph-lightbox';
+    lightbox.innerHTML = `
+        <div class="ph-lightbox-overlay"></div>
+        <div class="ph-lightbox-content">
+            <button class="ph-lightbox-close">&times;</button>
+            <button class="ph-lightbox-prev">&#10094;</button>
+            <img class="ph-lightbox-img" src="" alt="Enlarged Image">
+            <button class="ph-lightbox-next">&#10095;</button>
+        </div>
+    `;
+    document.body.appendChild(lightbox);
+
+    // CSS injected dynamically so we don't have to edit all HTML files
+    const style = document.createElement('style');
+    style.textContent = `
+        #ph-lightbox { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 10000; align-items: center; justify-content: center; }
+        #ph-lightbox.active { display: flex; }
+        .ph-lightbox-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
+        .ph-lightbox-content { position: relative; max-width: 80vw; max-height: 80vh; display: flex; align-items: center; justify-content: center; z-index: 10001; }
+        .ph-lightbox-img { max-width: 100%; max-height: 80vh; object-fit: contain; box-shadow: 0 0 20px rgba(255,170,0,0.3); border: 1px solid rgba(255,170,0,0.2); background: rgba(0,0,0,0.5); }
+        .ph-lightbox-close, .ph-lightbox-prev, .ph-lightbox-next { position: absolute; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,170,0,0.2); border-radius: 50%; width: 40px; height: 40px; color: #fff; font-size: 1.5rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
+        .ph-lightbox-close:hover, .ph-lightbox-prev:hover, .ph-lightbox-next:hover { color: var(--orange, #ff5100); border-color: var(--orange, #ff5100); transform: scale(1.1); }
+        .ph-lightbox-close { top: -50px; right: -50px; font-size: 2rem; }
+        .ph-lightbox-prev { left: -60px; }
+        .ph-lightbox-next { right: -60px; }
+        .gallery-ph-grid img { cursor: pointer; transition: transform 0.3s, filter 0.3s; }
+        .gallery-ph-grid img:hover { transform: scale(1.03); filter: brightness(1.2); }
+        
+        @media (max-width: 768px) {
+            .ph-lightbox-content { max-width: 90vw; }
+            .ph-lightbox-prev { left: 10px; }
+            .ph-lightbox-next { right: 10px; }
+            .ph-lightbox-close { top: -45px; right: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+
+    const images = Array.from(document.querySelectorAll('.gallery-ph-grid img'));
+    if (images.length === 0) return; // Only run if there are images
+    
+    let currentIndex = 0;
+
+    const lbImg = lightbox.querySelector('.ph-lightbox-img');
+    const lbClose = lightbox.querySelector('.ph-lightbox-close');
+    const lbPrev = lightbox.querySelector('.ph-lightbox-prev');
+    const lbNext = lightbox.querySelector('.ph-lightbox-next');
+    const lbOverlay = lightbox.querySelector('.ph-lightbox-overlay');
+
+    function showImage(index) {
+        if (index < 0) index = images.length - 1;
+        if (index >= images.length) index = 0;
+        currentIndex = index;
+        lbImg.src = images[currentIndex].src;
+    }
+
+    images.forEach((img, idx) => {
+        img.addEventListener('click', () => {
+            showImage(idx);
+            lightbox.classList.add('active');
+        });
+    });
+
+    lbClose.addEventListener('click', () => lightbox.classList.remove('active'));
+    lbOverlay.addEventListener('click', () => lightbox.classList.remove('active'));
+    lbPrev.addEventListener('click', () => showImage(currentIndex - 1));
+    lbNext.addEventListener('click', () => showImage(currentIndex + 1));
+
+    document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') lightbox.classList.remove('active');
+        if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+        if (e.key === 'ArrowRight') showImage(currentIndex + 1);
+    });
+});
