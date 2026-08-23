@@ -1,94 +1,323 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phoenix Hacks 1.0 · PHOENIX</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;600&family=Courier+Prime&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;600&family=Courier+Prime&display=swap"
+        rel="stylesheet">
     <style>
-        :root { --orange:#ff5100; --gold:#ffaa00; --red:#ff003c; --bg:#050303; --panel:rgba(14,9,9,.72); --muted:#a3a3a3; --border:rgba(255,81,0,.18); }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { background: var(--bg); color: #fff; font-family: 'Space Grotesk', sans-serif; }
-        body { min-height: 100vh; overflow-x: hidden; }
-        #ec { position: fixed; top:0; left:0; width:100vw; height:100vh; z-index:0; pointer-events:none; }
-        nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:18px 48px; background:linear-gradient(to bottom,rgba(5,3,3,.9) 0%,transparent 100%); }
-        .logo { display:flex; align-items:center; } .logo-img { width:100px; height:auto; display:block; filter:drop-shadow(0 0 8px rgba(255,81,0,.35)); }
-        .back-btn { font-family:'Courier Prime',monospace; font-size:.8rem; letter-spacing:2px; color:var(--muted); border:1px solid var(--border); padding:8px 18px; text-decoration:none; transition:color .3s,border-color .3s; }
-        .back-btn:hover { color:var(--orange); border-color:var(--orange); }
-        .event-hero { position:relative; z-index:2; min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:120px 40px 80px; text-align:center; }
-        .tag { font-family:'Courier Prime',monospace; font-size:.78rem; color:var(--gold); letter-spacing:3px; margin-bottom:16px; }
-        h1 { font-family:'Orbitron',sans-serif; font-size:clamp(2rem,5vw,4rem); font-weight:900; line-height:1.05; margin-bottom:20px; }
-        .glow { text-shadow:0 0 30px rgba(255,170,0,.4); color:var(--gold); }
-        .subtitle { font-size:1rem; color:var(--muted); letter-spacing:2px; margin-bottom:48px; }
-        .info-strip { display:flex; gap:30px; flex-wrap:wrap; justify-content:center; margin-bottom:60px; }
-        .info-box { background:var(--panel); border:1px solid var(--border); backdrop-filter:blur(12px); padding:22px 32px; min-width:160px; text-align:left; }
-        .info-label { font-family:'Courier Prime',monospace; font-size:.7rem; color:var(--muted); margin-bottom:6px; letter-spacing:2px; }
-        .info-val { font-family:'Orbitron',sans-serif; font-size:.9rem; font-weight:700; }
-        .img-poster { width:100%; max-width:640px; aspect-ratio:4/5; border:1px solid rgba(255,170,0,.35); margin-bottom:60px; position:relative; overflow:hidden; }
-        .img-poster img { width:100%; height:100%; object-fit:cover; display:block; }
-        .event-content { position:relative; z-index:2; max-width:900px; margin:0 auto; padding:0 40px 120px; }
-        .section-block { margin-bottom:50px; }
-        .block-title { font-family:'Orbitron',sans-serif; font-size:1.1rem; color:var(--gold); margin-bottom:16px; letter-spacing:2px; border-bottom:1px solid var(--border); padding-bottom:10px; }
-        .block-text { color:var(--muted); line-height:1.75; font-size:.95rem; }
-        .gallery-ph-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-        .gallery-ph-item { aspect-ratio:4/3; background:var(--panel); border:1px dashed rgba(255,170,0,.2); display:flex; justify-content:center; align-items:center; font-family:'Courier Prime',monospace; font-size:.7rem; color:rgba(255,255,255,.3); letter-spacing:1px; }
-        .cta-row { text-align:center; margin-top:60px; }
-        .cta-btn { display:inline-block; padding:16px 40px; background:var(--orange); color:#fff; font-family:'Orbitron',sans-serif; font-size:.85rem; letter-spacing:2px; font-weight:700; text-decoration:none; border:none; cursor:pointer; box-shadow:0 0 20px rgba(255,81,0,.35); transition:background .3s, box-shadow .3s; }
-        .cta-btn:hover { background:var(--gold); color:#000; box-shadow:0 0 30px rgba(255,170,0,.5); }
+        :root {
+            --orange: #ff5100;
+            --gold: #ffaa00;
+            --red: #ff003c;
+            --bg: #050303;
+            --panel: rgba(14, 9, 9, .72);
+            --muted: #a3a3a3;
+            --border: rgba(255, 81, 0, .18);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            background: var(--bg);
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #ec {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 48px;
+            background: linear-gradient(to bottom, rgba(5, 3, 3, .9) 0%, transparent 100%);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-img {
+            width: 100px;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 0 8px rgba(255, 81, 0, .35));
+        }
+
+        .back-btn {
+            font-family: 'Courier Prime', monospace;
+            font-size: .8rem;
+            letter-spacing: 2px;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 8px 18px;
+            text-decoration: none;
+            transition: color .3s, border-color .3s;
+        }
+
+        .back-btn:hover {
+            color: var(--orange);
+            border-color: var(--orange);
+        }
+
+        .event-hero {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 120px 40px 80px;
+            text-align: center;
+        }
+
+        .tag {
+            font-family: 'Courier Prime', monospace;
+            font-size: .78rem;
+            color: var(--gold);
+            letter-spacing: 3px;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 20px;
+        }
+
+        .glow {
+            text-shadow: 0 0 30px rgba(255, 170, 0, .4);
+            color: var(--gold);
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--muted);
+            letter-spacing: 2px;
+            margin-bottom: 48px;
+        }
+
+        .info-strip {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+
+        .info-box {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            padding: 22px 32px;
+            min-width: 160px;
+            text-align: left;
+        }
+
+        .info-label {
+            font-family: 'Courier Prime', monospace;
+            font-size: .7rem;
+            color: var(--muted);
+            margin-bottom: 6px;
+            letter-spacing: 2px;
+        }
+
+        .info-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: .9rem;
+            font-weight: 700;
+        }
+
+        .img-poster {
+            width: 100%;
+            max-width: 640px;
+            aspect-ratio: 4/5;
+            border: 1px solid rgba(255, 170, 0, .35);
+            margin-bottom: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .img-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .event-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 40px 120px;
+        }
+
+        .section-block {
+            margin-bottom: 50px;
+        }
+
+        .block-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 16px;
+            letter-spacing: 2px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .block-text {
+            color: var(--muted);
+            line-height: 1.75;
+            font-size: .95rem;
+        }
+
+        .gallery-ph-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .gallery-ph-item {
+            aspect-ratio: 4/3;
+            background: var(--panel);
+            border: 1px dashed rgba(255, 170, 0, .2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier Prime', monospace;
+            font-size: .7rem;
+            color: rgba(255, 255, 255, .3);
+            letter-spacing: 1px;
+        }
+
+        .cta-row {
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background: var(--orange);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: .85rem;
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 81, 0, .35);
+            transition: background .3s, box-shadow .3s;
+        }
+
+        .cta-btn:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 30px rgba(255, 170, 0, .5);
+        }
     </style>
 </head>
+
 <body data-theme="orange">
-<canvas id="ec"></canvas>
-<nav>
-    <a href="../index.html" class="logo"><img src="../assets/phoenix_logo.webp" alt="PHOENIX" class="logo-img"></a>
-    <a href="../index.html#gallery" class="back-btn">← BACK TO CHRONICLES</a>
-</nav>
-<section class="event-hero">
-    <div class="tag">UPCOMING · LOG_02 · CHRONICLES</div>
-    <h1>PHOENIX<br><span class="glow">HACKS 1.0</span></h1>
-    <p class="subtitle">PHOENIX COLLEGE CLUB · RAJALAKSHMI ENGINEERING COLLEGE</p>
-    <div class="info-strip">
-        <div class="info-box"><div class="info-label">DATE</div><div class="info-val">19TH &amp; 20TH AUGUST 2026</div></div>
-        <div class="info-box"><div class="info-label">TIME</div><div class="info-val">12 NOON 19TH → 12 NOON 20TH</div></div>
-        <div class="info-box"><div class="info-label">VENUE</div><div class="info-val">INDOOR AUDITORIUM</div></div>
-        <div class="info-box"><div class="info-label">STATUS</div><div class="info-val" style="color:var(--gold)">UPCOMING</div></div>
-    </div>
-    <div class="img-poster">
-        <img src="../assets/Phoenix_hacks_1.0.webp" alt="Phoenix Hacks 1.0">
-    </div>
-</section>
-<div class="event-content">
-    <div class="section-block">
-        <div class="block-title">ABOUT THIS EVENT</div>
-        <p class="block-text">
-            PHOENIX HACKS 1.0 is the club's first-ever hackathon — a 24-hour build sprint where squads form, products ship, and only the boldest ideas rise from the ashes. Two days. One mission. Code. Build. Conquer.
-        </p>
-    </div>
-    <div class="section-block">
-        <div class="block-title">HIGHLIGHTS</div>
-        <p class="block-text">
-            • 24-hour non-stop build sprint<br>
-            • Team-based hackathon across domains<br>
-            • Mentor support and tech talks<br>
-            • Judging by faculty and industry experts<br>
-            • Prizes, certificates, and goodies for top teams
-        </p>
-    </div>
-    <div class="section-block">
-        <div class="block-title">PHOTO GALLERY — COMING SOON</div>
-        <div class="gallery-ph-grid">
-            <div class="gallery-ph-item">IMG_001</div>
-            <div class="gallery-ph-item">IMG_002</div>
-            <div class="gallery-ph-item">IMG_003</div>
-            <div class="gallery-ph-item">IMG_004</div>
-            <div class="gallery-ph-item">IMG_005</div>
-            <div class="gallery-ph-item">IMG_006</div>
+    <canvas id="ec"></canvas>
+    <nav>
+        <a href="../index.html" class="logo"><img src="../assets/phoenix_logo.webp" alt="PHOENIX" class="logo-img"></a>
+        <a href="../index.html#gallery" class="back-btn">← BACK TO CHRONICLES</a>
+    </nav>
+    <section class="event-hero">
+        <div class="tag">CONCLUDED · LOG_02 · CHRONICLES</div>
+        <h1>PHOENIX<br><span class="glow">HACKS 1.0</span></h1>
+        <p class="subtitle">PHOENIX COLLEGE CLUB · RAJALAKSHMI ENGINEERING COLLEGE</p>
+        <div class="info-strip">
+            <div class="info-box">
+                <div class="info-label">DATE</div>
+                <div class="info-val">19TH &amp; 20TH AUGUST 2026</div>
+            </div>
+            <div class="info-box">
+                <div class="info-label">TIME</div>
+                <div class="info-val">12 NOON 19TH → 12 NOON 20TH</div>
+            </div>
+            <div class="info-box">
+                <div class="info-label">VENUE</div>
+                <div class="info-val">INDOOR AUDITORIUM</div>
+            </div>
+            <div class="info-box">
+                <div class="info-label">STATUS</div>
+                <div class="info-val" style="color:var(--gold)">CONCLUDED</div>
+            </div>
+        </div>
+        <div class="img-poster">
+            <img src="../assets/Phoenix_hacks_1.0.webp" alt="Phoenix Hacks 1.0">
+        </div>
+    </section>
+    <div class="event-content">
+        <div class="section-block">
+            <div class="block-title">ABOUT THIS EVENT</div>
+            <p class="block-text">
+                PHOENIX HACKS 1.0 is the club's first-ever hackathon — a 24-hour build sprint where squads form,
+                products ship, and only the boldest ideas rise from the ashes. Two days. One mission. Code. Build.
+                Conquer.
+            </p>
+        </div>
+        <div class="section-block">
+            <div class="block-title">HIGHLIGHTS</div>
+            <p class="block-text">
+                • 24-hour non-stop build sprint<br>
+                • Team-based hackathon across domains<br>
+                • Mentor support and tech talks<br>
+                • Judging by faculty and industry experts<br>
+                • Prizes, certificates, and goodies for top teams
+            </p>
+        </div>
+        <div class="section-block">
+            <div class="block-title">PHOTO GALLERY — COMING SOON</div>
+            <div class="gallery-ph-grid">
+                <div class="gallery-ph-item">IMG_001</div>
+                <div class="gallery-ph-item">IMG_002</div>
+                <div class="gallery-ph-item">IMG_003</div>
+                <div class="gallery-ph-item">IMG_004</div>
+                <div class="gallery-ph-item">IMG_005</div>
+                <div class="gallery-ph-item">IMG_006</div>
+            </div>
+        </div>
+        <div class="cta-row">
+            <a href="https://phoenixhacks.vercel.app/" target="_blank" class="cta-btn">REGISTER NOW</a>
         </div>
     </div>
-    <div class="cta-row">
-        <a href="https://phoenixhacks.vercel.app/" target="_blank" class="cta-btn">REGISTER NOW</a>
-    </div>
-</div>
-<script src="events.js"></script>
+    <script src="events.js"></script>
 </body>
+
 </html>
